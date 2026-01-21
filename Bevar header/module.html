@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bevar Våtrom Header</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Linker til ekstern CSS-fil for alle stiler -->
+    <link rel="stylesheet" href="module.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bevar-blue': '#417A8F',
+                        'bevar-dark-blue': '#315D6D',
+                        'bevar-light-gray': '#F8FAFC',
+                    }
+                }
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <div class="banner-container">
+        <div class="text-column">
+            <h2 id="mainTitle" class="text-3xl lg:text-5xl font-extrabold text-bevar-dark-blue mb-4"></h2>
+            <p id="mainDescription" class="text-gray-600 mb-8 text-lg lg:text-xl leading-relaxed">
+                <!-- Dette settes av JS i updateText('default') -->
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-start gap-4">
+                <a href="https://www.bevarvatrom.no/kontakt-oss"
+                    class="main-button bg-bevar-blue text-white font-bold py-3.5 px-8 rounded-xl shadow-xl text-lg">
+                    Kontakt oss i dag
+                </a>
+                <a href="tel:03546"
+                    class="main-button bg-transparent border-2 border-bevar-blue text-bevar-blue font-bold py-3.5 px-8 rounded-xl text-lg">
+                    Ring 03546
+                </a>
+            </div>
+        </div>
+
+        <div class="canvas-column" id="canvasColumn">
+            <!-- Default bakgrunnsbilde (flyttet til egen div for animasjon) -->
+            <div id="default-bg"></div>
+
+            <!-- Overlayet for lekkasje-animasjonen -->
+            <div id="lekkasje-overlay"></div>
+            <!-- Generisk overlay for fade/zoom. -->
+            <div id="zoom-overlay"></div>
+
+            <!-- HVER KNAPP ER NÅ WRAPPET I SIN EGEN DIV FOR POSISJONERING -->
+
+            <!-- LEKKASJE -->
+            <div class="damage-button-wrapper" data-key="lekkasje" data-pos-x="85" data-pos-y="90">
+                <a href="https://www.bevarvatrom.no/reparasjon-v%C3%A5trom" id="lekkasje-button" class="damage-button"
+                    data-zoom-x="50" data-zoom-y="100" data-zoom-scale="1.0" style="animation-delay: 0s;">
+                    <span>Lekkasje</span>
+                </a>
+            </div>
+
+            <!-- FLISSKADER -->
+            <div class="damage-button-wrapper" data-key="flisskader" data-pos-x="30" data-pos-y="80">
+                <a href="https://www.bevarvatrom.no/reparasjon-v%C3%A5trom" id="flisskader-button" class="damage-button"
+                    data-zoom-x="50" data-zoom-y="100" data-zoom-scale="3.2" style="animation-delay: 1.5s;">
+                    <span>Flisskader</span>
+                </a>
+            </div>
+
+            <!-- RØRPROBLEMER -->
+            <div class="damage-button-wrapper" data-key="rorproblemer" data-pos-x="70" data-pos-y="70">
+                <a href="https://www.bevarvatrom.no/reparasjon-v%C3%A5trom" id="rorproblemer-button"
+                    class="damage-button" data-zoom-x="50" data-zoom-y="75" data-zoom-scale="1.8"
+                    style="animation-delay: 0.8s;">
+                    <span>Skade på rør</span>
+                </a>
+            </div>
+
+            <!-- ARMATUR -->
+            <div class="damage-button-wrapper" data-key="armatur" data-pos-x="20" data-pos-y="30">
+                <a href="https://www.bevarvatrom.no/reparasjon-v%C3%A5trom" id="armatur-button" class="damage-button"
+                    data-zoom-x="5" data-zoom-y="50" data-zoom-scale="2.0" style="animation-delay: 2.2s;">
+                    <span>Armatur</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const canvasColumn = document.getElementById('canvasColumn');
+        const defaultBg = document.getElementById('default-bg');
+        const lekkasjeOverlay = document.getElementById('lekkasje-overlay');
+        const zoomOverlay = document.getElementById('zoom-overlay');
+        const mainTitle = document.getElementById('mainTitle');
+        const mainDescription = document.getElementById('mainDescription');
+        const buttonWrappers = document.querySelectorAll('.damage-button-wrapper');
+
+        let resetTimeoutId = null;
+        const ANIMATION_DURATION = 800;
+
+        const services = {
+            'default': {
+                description: 'Når det oppstår skader på våtrom – enten i membran, sluk, fliser, sisterne eller rør – tror mange at eneste utvei er å rive hele badet. Vi tilbyr et bedre alternativ: <strong class="text-bevar-dark-blue">punktreparasjon.</strong>'
+            }
+        };
+
+        const imageMap = {
+            'default': 'https://146138890.fs1.hubspotusercontent-eu1.net/hubfs/146138890/b6dd4484-3b01-478d-b7cf-f45d828b25f0.png',
+            'lekkasje_under': 'https://146138890.fs1.hubspotusercontent-eu1.net/hubfs/146138890/underetasje.jpg',
+            'transition': 'transition_blur.png',
+            'flisskader': 'https://146138890.fs1.hubspotusercontent-eu1.net/hubfs/146138890/Flisskadegulv.png',
+            'rorproblemer': 'https://146138890.fs1.hubspotusercontent-eu1.net/hubfs/146138890/r%C3%B8r.jpg',
+            'armatur': 'https://146138890.fs1.hubspotusercontent-eu1.net/hubfs/146138890/riktigarmatur.jpg'
+        };
+
+        const defaultContent = services['default'];
+
+
+        // ======== RULLERENDE OVERSKRIFT LOGIKK (Uendret) ========
+        const rollingWords = ["våtrom", "sisterne", "membran", "sluk"];
+        let rollingIntervalId = null;
+        let currentWordIndex = 0;
+
+        function startRollingText() {
+            if (!mainTitle.innerHTML.includes('rollingWord') || !mainTitle.innerHTML.includes('Bevar')) {
+                mainTitle.innerHTML = `<span class="whitespace-nowrap">Bevar <span id="rollingWord" style="transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; display: inline-block;">${rollingWords[currentWordIndex]}</span></span>`;
+            }
+            const rollingWordSpan = document.getElementById('rollingWord');
+            if (!rollingWordSpan) return;
+            function cycleWord() {
+                rollingWordSpan.style.opacity = '0';
+                rollingWordSpan.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    currentWordIndex = (currentWordIndex + 1) % rollingWords.length;
+                    rollingWordSpan.textContent = rollingWords[currentWordIndex];
+                    rollingWordSpan.style.transform = 'translateY(5px)';
+                    setTimeout(() => {
+                        rollingWordSpan.style.opacity = '1';
+                        rollingWordSpan.style.transform = 'translateY(0)';
+                    }, 50);
+                }, 300);
+            }
+            if (rollingIntervalId) clearInterval(rollingIntervalId);
+            rollingIntervalId = setInterval(cycleWord, 3000);
+        }
+
+        function stopRollingText() {
+            if (rollingIntervalId) {
+                clearInterval(rollingIntervalId);
+                rollingIntervalId = null;
+                mainTitle.innerHTML = "Bevar Våtrom";
+            }
+        }
+
+        // ======== KNAPPEPOSISJONERING (Uendret) ========
+        function positionButtons() {
+            buttonWrappers.forEach(wrapper => {
+                const posX = parseFloat(wrapper.dataset.posX);
+                const posY = parseFloat(wrapper.dataset.posY);
+                if (!isNaN(posX) && !isNaN(posY)) {
+                    wrapper.style.left = `${posX}%`;
+                    wrapper.style.top = `${posY}%`;
+                    wrapper.style.transform = `translate(-50%, -50%)`;
+                }
+            });
+        }
+
+        // ======== LOGIKK FOR BILDEVISNING OG ANIAMASJONER (OPPDATERT - GPU OPTIMALISERT) ========
+        function zoomIn(key, zoomX, zoomY, zoomScale) {
+            showWrapper(key);
+
+            // Alltid stopp Lekkasje-animasjonen og fjern closing-state hvis vi går inn igjen
+            canvasColumn.classList.remove('lekkasje-active');
+            canvasColumn.classList.remove('lekkasje-closing');
+
+            if (key === 'lekkasje') {
+                // SPESIALTILFELLE: Lekkasje-animasjon (Sliding)
+                zoomOverlay.style.opacity = '0';
+
+                // Nullstill eventuell zoom
+                defaultBg.style.transform = 'scale(1)';
+                defaultBg.style.transformOrigin = 'center';
+
+                // Sørg for at default-bg har riktig bilde
+                defaultBg.style.backgroundImage = `url('${imageMap['default']}')`;
+
+                // Sett bilder for overlays
+                lekkasjeOverlay.style.backgroundImage = `url('${imageMap['lekkasje_under']}')`;
+
+                // Start animasjonssekvensen ved å legge til klassen på containeren
+                requestAnimationFrame(() => {
+                    canvasColumn.classList.add('lekkasje-active');
+                });
+            } else {
+                // STANDARD TILFELLE: Synkronisert Zoom/Fade med TRANSFORMS
+                const imageUrl = imageMap[key];
+
+                // Oppdater hovedtittel
+                mainTitle.innerHTML = `Reparer ${key.charAt(0).toUpperCase() + key.slice(1)}`;
+
+                const img = new Image();
+                img.onload = function () {
+                    // TRINN 1: Klargjør overlay
+                    zoomOverlay.style.transition = 'none';
+                    zoomOverlay.style.backgroundImage = `url('${imageUrl}')`;
+                    zoomOverlay.style.opacity = '0';
+
+                    // Nullstill transforms midlertidig for å sette origin uten animasjon
+                    defaultBg.style.transition = 'none';
+
+                    // Sett transform-origin til fokuspunktet (viktig: dette må skje før skalering)
+                    const origin = `${zoomX}% ${zoomY}%`;
+                    defaultBg.style.transformOrigin = origin;
+                    zoomOverlay.style.transformOrigin = origin;
+
+                    // Sørg for at vi starter fra scale(1)
+                    defaultBg.style.transform = 'scale(1)';
+                    zoomOverlay.style.transform = 'scale(1)';
+
+                    // Tving reflow
+                    void zoomOverlay.offsetWidth;
+
+                    // TRINN 2: Start animasjonen
+                    requestAnimationFrame(() => {
+                        // Gjeninnfør transitions
+                        zoomOverlay.style.transition = '';
+                        defaultBg.style.transition = '';
+
+                        // Utfør zoom (scale)
+                        defaultBg.style.transform = `scale(${zoomScale})`;
+                        zoomOverlay.style.transform = `scale(${zoomScale})`;
+
+                        // Fade inn overlay
+                        zoomOverlay.style.opacity = '1';
+                    });
+                };
+
+                img.onerror = function () {
+                    console.error(`Klarte ikke laste bilde for nøkkel: ${key}.`);
+                };
+
+                img.src = imageUrl;
+                if (img.complete) img.onload();
+            }
+        }
+
+        function zoomOut() {
+            hideButtons();
+
+            // 1. Håndter Lekkasje-animasjon (Reverse)
+            if (canvasColumn.classList.contains('lekkasje-active')) {
+                canvasColumn.classList.remove('lekkasje-active');
+                canvasColumn.classList.add('lekkasje-closing');
+                setTimeout(() => {
+                    canvasColumn.classList.remove('lekkasje-closing');
+                }, 600);
+            } else {
+                canvasColumn.classList.remove('lekkasje-active');
+                canvasColumn.classList.remove('lekkasje-closing');
+            }
+
+            // 2. Zoom ut med Transforms
+
+            // Zoom ut overlay og fade ut
+            zoomOverlay.style.opacity = '0';
+            zoomOverlay.style.transform = 'scale(1)';
+
+            // Zoom ut base-bildet
+            defaultBg.style.transform = 'scale(1)';
+
+            // Nullstill eventuell custom transition
+            zoomOverlay.style.transition = '';
+            defaultBg.style.transition = '';
+
+            setTimeout(() => {
+                showButtons();
+                updateText('default');
+                // Vi trenger ikke fjerne background-image umiddelbart, men kan gjøre det for opprydding
+                // zoomOverlay.style.backgroundImage = 'none'; 
+
+                // Tilbakestill origin til center etter animasjonen er ferdig for ryddighet
+                // (Valgfritt, men kan forhindre hopp ved neste resize/animasjon hvis logikken svikter)
+                setTimeout(() => {
+                    if (zoomOverlay.style.opacity === '0') {
+                        defaultBg.style.transformOrigin = 'center';
+                        zoomOverlay.style.transformOrigin = 'center';
+                    }
+                }, 1000);
+
+            }, 400);
+        }
+
+        function updateText(key) {
+            if (key === 'default') {
+                startRollingText();
+                mainDescription.innerHTML = defaultContent.description;
+            }
+        }
+
+        // Funksjoner for å vise/skjule knapper
+        function hideButtons() {
+            buttonWrappers.forEach(wrapper => {
+                wrapper.style.opacity = '0';
+                wrapper.style.pointerEvents = 'none';
+            });
+        }
+
+        function showButtons() {
+            buttonWrappers.forEach(wrapper => {
+                wrapper.style.opacity = '1';
+                wrapper.style.pointerEvents = 'auto';
+            });
+        }
+
+        // FUNKSJON: Viser kun én spesifikk knapp
+        function showWrapper(keyToShow) {
+            buttonWrappers.forEach(wrapper => {
+                if (wrapper.dataset.key === keyToShow) {
+                    wrapper.style.opacity = '1';
+                    wrapper.style.pointerEvents = 'auto';
+                } else {
+                    wrapper.style.opacity = '0';
+                    wrapper.style.pointerEvents = 'none';
+                }
+            });
+        }
+
+
+        // Hendelseslyttere for knapper (Zoom og bildebytte)
+        buttonWrappers.forEach(wrapper => {
+            const key = wrapper.dataset.key;
+            const button = wrapper.querySelector('.damage-button');
+            const zoomX = button.dataset.zoomX;
+            const zoomY = button.dataset.zoomY;
+            const zoomScale = parseFloat(button.dataset.zoomScale) || 1.8;
+
+            wrapper.addEventListener('mouseenter', () => {
+                if (resetTimeoutId) {
+                    clearTimeout(resetTimeoutId);
+                    resetTimeoutId = null;
+                }
+
+                zoomIn(key, zoomX, zoomY, zoomScale);
+                stopRollingText();
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+                // Starter umiddelbart zoomOut/fadeOut
+                resetTimeoutId = setTimeout(() => {
+                    zoomOut();
+                    resetTimeoutId = null;
+                }, 0);
+            });
+        });
+
+        // ======== MAGNETISKE KNAPPER (Kontakt oss) - OPTIMALISERT ========
+        function initMagneticButtons() {
+            const buttons = document.querySelectorAll('.main-button');
+
+            buttons.forEach(btn => {
+                let frameId = null;
+
+                btn.addEventListener('mousemove', (e) => {
+                    if (frameId) return; // Skip if a frame is already pending
+
+                    frameId = requestAnimationFrame(() => {
+                        const rect = btn.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+
+                        // Beregn avstand fra sentrum
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+
+                        // Økt divisor for litt mer subtil bevegelse (fra 8 til 10)
+                        const deltaX = (x - centerX) / 10;
+                        const deltaY = (y - centerY) / 10;
+
+                        btn.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(1.05)`;
+                        frameId = null;
+                    });
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    if (frameId) {
+                        cancelAnimationFrame(frameId);
+                        frameId = null;
+                    }
+                    btn.style.transform = '';
+                });
+            });
+        }
+
+        // Start oppsettet
+        window.onload = function () {
+            positionButtons(); // Plasserer knappene ved lasting
+            updateText('default');
+            initMagneticButtons(); // Start magnetisk effekt
+        }
+
+    </script>
+</body>
+
+</html>

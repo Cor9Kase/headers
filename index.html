@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Forhåndsvisning - Bevar & M-TEK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0f172a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .preview-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+            transition: all 0.3s ease;
+        }
+
+        .preview-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+
+<body class="p-6">
+    <div class="max-w-6xl w-full">
+        <header class="text-center mb-16">
+            <h1 class="text-5xl font-extrabold mb-4">Prosjekt <span class="gradient-text">Header-design</span></h1>
+            <p class="text-slate-400 text-xl">Velg en av løsningene nedenfor for å se forhåndsvisningen.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- M-tek Header -->
+            <div class="glass-card p-8 flex flex-col h-full">
+                <div class="mb-6 h-12 flex items-center">
+                    <h2 class="text-2xl font-bold">M-TEK Header</h2>
+                </div>
+                <p class="text-slate-400 mb-8 flex-grow">
+                    Kommunikasjonsmosaikk med interaktiv zoom-effekt og rullende tekst-animasjoner.
+                </p>
+                <a href="M-tek header/module.html"
+                    class="preview-btn text-white font-bold py-4 px-6 rounded-xl text-center">
+                    Åpne forhåndsvisning
+                </a>
+            </div>
+
+            <!-- M-tett Header -->
+            <div class="glass-card p-8 flex flex-col h-full">
+                <div class="mb-6 h-12 flex items-center">
+                    <h2 class="text-2xl font-bold">M-TETT Header</h2>
+                </div>
+                <p class="text-slate-400 mb-8 flex-grow">
+                    Fokusert på baderomstjenester med før/etter visuelle effekter og hotspots.
+                </p>
+                <a href="M-tett header/module.html"
+                    class="preview-btn text-white font-bold py-4 px-6 rounded-xl text-center">
+                    Åpne forhåndsvisning
+                </a>
+            </div>
+
+            <!-- Bevar Header -->
+            <div class="glass-card p-8 flex flex-col h-full">
+                <div class="mb-6 h-12 flex items-center">
+                    <h2 class="text-2xl font-bold">Bevar Header</h2>
+                </div>
+                <p class="text-slate-400 mb-8 flex-grow">
+                    Ren og profesjonell header skreddersydd for Bevar Våtrom-profilen.
+                </p>
+                <a href="Bevar header/module.html"
+                    class="preview-btn text-white font-bold py-4 px-6 rounded-xl text-center">
+                    Åpne forhåndsvisning
+                </a>
+            </div>
+        </div>
+
+        <footer class="mt-20 text-center text-slate-500 text-sm">
+            &copy; 2026 Header_bevar Prosjekt. Klar til presentasjon.
+        </footer>
+    </div>
+</body>
+
+</html>

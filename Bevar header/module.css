@@ -1,0 +1,254 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f2f5;
+}
+
+.banner-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 1.5rem;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 600px;
+}
+
+@media (min-width: 768px) {
+    .banner-container {
+        flex-direction: row;
+    }
+}
+
+.canvas-column {
+    flex: 1;
+    min-height: 350px;
+    position: relative;
+    background-color: #E6EBF0;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+
+/* Default background div */
+#default-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-image: url('https://146138890.fs1.hubspotusercontent-eu1.net/hubfs/146138890/b6dd4484-3b01-478d-b7cf-f45d828b25f0.png');
+    /* Bruker transform for ytelse (GPU) */
+    transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+    z-index: 1;
+}
+
+
+
+/* Keyframes for animasjoner */
+/* Default BG moves UP and OUT */
+@keyframes slideUpOut {
+    0% {
+        transform: translateY(0%);
+    }
+
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+/* Default BG moves DOWN and IN (Reverse) */
+@keyframes slideDownIn {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+
+
+/* Lekkasje Overlay slides UP and IN */
+@keyframes slideUpIn {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+/* Lekkasje Overlay slides DOWN and OUT */
+@keyframes slideDownOut {
+    0% {
+        transform: translateY(0%);
+    }
+
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+/* Trigger animasjoner når klassen legges til (OPENING) */
+.canvas-column.lekkasje-active #default-bg {
+    animation: slideUpOut 0.8s ease-in-out forwards;
+}
+
+
+
+.canvas-column.lekkasje-active #lekkasje-overlay {
+    animation: slideUpIn 0.8s ease-in-out forwards;
+}
+
+/* Trigger animasjoner når klassen fjernes (CLOSING) */
+.canvas-column.lekkasje-closing #default-bg {
+    animation: slideDownIn 0.6s ease-in-out forwards;
+}
+
+
+
+.canvas-column.lekkasje-closing #lekkasje-overlay {
+    animation: slideDownOut 0.6s ease-in-out forwards;
+}
+
+.text-column {
+    flex: 1;
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.damage-button-wrapper {
+    position: absolute;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Floating Animation */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.damage-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Plass til ikon */
+    padding: 0.9rem 1.4rem;
+    background: rgba(255, 255, 255, 0.7);
+    /* Glass-effekt */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: #315D6D;
+    font-weight: 700;
+    font-size: 1.05rem;
+    box-shadow: 0 8px 32px rgba(49, 93, 109, 0.15);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: float 6s ease-in-out infinite;
+    will-change: transform;
+}
+
+.damage-button:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: #ffffff;
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 15px 40px rgba(49, 93, 109, 0.25);
+    animation-play-state: paused;
+}
+
+/* Gradient Text for Title - FJERNET pga lesbarhetsproblemer med animasjon */
+#mainTitle {
+    color: #1F3B4D;
+    /* Solid mørk blå */
+    background: none;
+    -webkit-background-clip: border-box;
+    -webkit-text-fill-color: currentColor;
+    background-clip: border-box;
+    text-shadow: none;
+}
+
+
+
+.main-button {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.main-button:hover {
+    box-shadow: 0 20px 40px rgba(65, 122, 143, 0.25);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.main-button:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 10px 20px rgba(65, 122, 143, 0.2);
+}
+
+/* Overlegg for Lekkasje-animasjon */
+#lekkasje-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 1;
+    pointer-events: none;
+    transform: translateY(100%);
+    /* Fjernet transition her, bruker animation i stedet */
+}
+
+/* Fjernet #lekkasje-overlay.active regelen da vi nå bruker animation styrt av parent */
+
+/* Generisk overlegg for Zoom/Fade-effekt */
+#zoom-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    /* Optimalisert transition */
+    transition: opacity 1s ease-in-out, transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Fjernet background-image fra canvas-column siden vi nå bruker #default-bg */
+.canvas-column {
+    background-image: none;
+}
