@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-TEK - Teknisk Ekspertise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="module.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'mtek-navy': '#142A56',
+                        'mtek-blue': '#1e3a8a',
+                        'mtek-soft': '#F1F5F9',
+                        'mtek-accent': '#38bdf8',
+                        'cable-orange': '#f97316',
+                    },
+                    boxShadow: {
+                        'soft': '0 20px 40px -10px rgba(20, 42, 86, 0.1)',
+                        'glow': '0 0 20px rgba(249, 115, 22, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Clean scanner line */
+        .scanner-beam {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #38bdf8;
+            box-shadow: 0 0 15px #38bdf8;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Result Popup - Cleaner */
+        .result-popup {
+            position: absolute;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            padding: 1.25rem;
+            width: 240px;
+            border: 1px solid #f1f5f9;
+            transform: scale(0.9) translateY(10px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .result-popup.active {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Cable appearance */
+        .cable-texture {
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0, 0, 0, 0.05) 2px, rgba(0, 0, 0, 0.05) 4px);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50">
+
+    <div class="banner-container">
+        <!-- Logo bar -->
+        <div class="logo-bar" style="padding: 1rem 3rem; background: #fff; border-bottom: 1px solid #f1f5f9;">
+            <img src="m-tek-logo-darker.svg" alt="M-TEK Logo" class="h-8">
+        </div>
+
+        <div class="main-content">
+            <!-- Left Text Content (Restored from Version A) -->
+            <div class="text-column">
+                <h1 id="mainTitle" class="text-3xl lg:text-4xl font-extrabold text-mtek-navy mb-3">
+                    M-TEK – Eksperter på <span id="rollingWord"
+                        style="display:inline-block; transition: all 0.3s ease;">varmekabler</span>
+                </h1>
+                <p id="mainDescription" class="text-gray-600 mb-6 text-base lg:text-lg leading-relaxed">
+                    Vi hjelper deg å ta vare på det du har. Med over 35 års erfaring innen elektrotekniske
+                    måletjenester, finner vi feilen og reparerer den lokalt – uten unødvendig riving.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-start gap-4">
+                    <a href="https://m-tek.no/kontakt-oss"
+                        class="main-button bg-mtek-navy text-white font-bold py-3.5 px-8 rounded-xl shadow-xl text-lg hover:translate-y-[-2px] transition-transform">
+                        Bestill feilsøking
+                    </a>
+                    <a href="tel:22000000"
+                        class="main-button bg-transparent border-2 border-mtek-navy text-mtek-navy font-bold py-3.5 px-8 rounded-xl text-lg hover:translate-y-[-2px] transition-transform">
+                        Ring en ekspert
+                    </a>
+                </div>
+
+                <div class="mt-8 flex items-center gap-4 text-sm font-medium text-mtek-navy/70">
+                    <span class="flex items-center gap-1.5">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z">
+                            </path>
+                        </svg>
+                        Etablert 1987
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z">
+                            </path>
+                        </svg>
+                        Bærekraftig reparasjon
+                    </span>
+                </div>
+            </div>
+
+            <!-- Right Visual Column (Version B Animation) -->
+            <div class="canvas-column flex items-center justify-center bg-white"
+                style="background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 24px 24px; position:relative; overflow:hidden;">
+
+                <div class="relative w-[90%] h-[80%]">
+                    <!-- Clean Canvas -->
+                    <canvas id="uiCanvas" class="w-full h-full block z-10"></canvas>
+
+                    <!-- Scanner Beam -->
+                    <div id="scanner" class="scanner-beam"></div>
+
+                    <!-- Result Popup (Floating close to the fault) -->
+                    <div id="result-popup" class="result-popup z-20">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                                <span class="text-red-600 text-lg">⚠️</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-sm">Brudd funnet</h3>
+                                <p class="text-xs text-slate-500 mt-0.5">Avstand: 3.2m fra vegg</p>
+                                <div class="mt-3 flex gap-2">
+                                    <span
+                                        class="px-2 py-1 bg-slate-100 rounded text-xs font-medium text-slate-600">Dybde:
+                                        3cm</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('uiCanvas');
+        const ctx = canvas.getContext('2d');
+        const scanner = document.getElementById('scanner');
+        const popup = document.getElementById('result-popup');
+
+        // --- Rolling Words Logic (Version A) ---
+        const rollingWords = ["varmekabler", "reparasjon"];
+        let rollingIndex = 0;
+        let rollingInterval = null;
+
+        function startRolling() {
+            if (rollingInterval) return;
+            rollingInterval = setInterval(() => {
+                rollingIndex = (rollingIndex + 1) % rollingWords.length;
+                updateRollingWord(rollingWords[rollingIndex]);
+            }, 3000);
+        }
+
+        function updateRollingWord(word) {
+            const span = document.getElementById('rollingWord');
+            if (!span) return;
+            span.style.opacity = '0';
+            span.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                span.textContent = word;
+                span.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    span.style.opacity = '1';
+                    span.style.transform = 'translateY(0)';
+                }, 50);
+            }, 300);
+        }
+
+        // --- Animation Logic (Version B) ---
+        let width, height;
+        let cablePath = [];
+        let animationState = 'searching';
+
+        function resize() {
+            const parent = canvas.parentElement;
+            width = parent.offsetWidth;
+            height = parent.offsetHeight;
+            canvas.width = width;
+            canvas.height = height;
+
+            // Adjust path based on size
+            const margin = 40;
+            const rows = 3;
+            const rowHeight = (height - margin * 2) / rows;
+
+            cablePath = [];
+            let y = margin + rowHeight / 2;
+            let x = margin;
+
+            // Simple S-shape
+            cablePath.push({ x, y });
+
+            for (let i = 0; i < rows; i++) {
+                const isEven = i % 2 === 0;
+                const targetX = isEven ? width - margin : margin;
+
+                cablePath.push({ x: targetX, y: y });
+
+                if (i < rows - 1) {
+                    y += rowHeight;
+                    cablePath.push({ x: targetX, y: y });
+                }
+            }
+        }
+
+        function drawCable(scanX = -1, isFaultFound = false) {
+            ctx.clearRect(0, 0, width, height);
+
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // 1. Draw the "Mat" or "Mesh" underneath
+            ctx.beginPath();
+            ctx.lineWidth = 14;
+            ctx.strokeStyle = '#f1f5f9';
+            tracePath(ctx);
+            ctx.stroke();
+
+            // 2. Draw the Cable
+            ctx.lineWidth = 6;
+
+            if (isFaultFound) {
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.shadowBlur = 0;
+            } else {
+                ctx.strokeStyle = '#f97316';
+                ctx.shadowColor = 'rgba(249, 115, 22, 0.4)';
+                ctx.shadowBlur = 10;
+            }
+
+            ctx.beginPath();
+            tracePath(ctx);
+            ctx.stroke();
+
+            // If scanning, draw the "Cold/Scanned" part overlay
+            if (scanX > 0 && !isFaultFound) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(0, 0, scanX, height);
+                ctx.clip();
+
+                ctx.beginPath();
+                ctx.lineWidth = 6;
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.shadowBlur = 0;
+                tracePath(ctx);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            // 3. Fault Marker
+            if (isFaultFound) {
+                ctx.beginPath();
+                ctx.lineWidth = 6;
+                ctx.strokeStyle = '#cbd5e1';
+                tracePath(ctx);
+                ctx.stroke();
+            }
+        }
+
+        function tracePath(context) {
+            if (cablePath.length < 2) return;
+            context.moveTo(cablePath[0].x, cablePath[0].y);
+            const r = 20;
+            for (let i = 1; i < cablePath.length - 1; i++) {
+                const p1 = cablePath[i];
+                const p2 = cablePath[i + 1];
+                context.arcTo(p1.x, p1.y, p2.x, p2.y, r);
+                context.lineTo(p2.x, p2.y);
+            }
+            if (cablePath.length > 0) {
+                const last = cablePath[cablePath.length - 1];
+                context.lineTo(last.x, last.y);
+            }
+        }
+
+        function animate() {
+            animationState = 'scanning';
+            popup.classList.remove('active');
+            popup.style.display = 'none';
+            scanner.style.display = 'block';
+            scanner.style.opacity = '1';
+
+            let pos = 0;
+            const speed = 3;
+            const faultX = width * 0.65; // Fault at 65% width
+
+            function loop() {
+                if (animationState !== 'scanning') return;
+
+                pos += speed;
+                scanner.style.left = pos + 'px';
+                drawCable(pos, false);
+
+                if (pos >= faultX) {
+                    foundFault(faultX);
+                } else {
+                    requestAnimationFrame(loop);
+                }
+            }
+            loop();
+        }
+
+        function foundFault(x) {
+            animationState = 'found';
+            scanner.style.left = x + 'px';
+            drawCable(-1, true);
+
+            const faultY = height / 2;
+
+            // Draw red dot
+            ctx.beginPath();
+            ctx.arc(x, faultY, 8, 0, Math.PI * 2);
+            ctx.fillStyle = '#ef4444';
+            ctx.fill();
+            ctx.shadowColor = '#ef4444';
+            ctx.shadowBlur = 20;
+
+            // Show Popup
+            popup.style.display = 'block';
+            popup.style.left = (x - 120) + 'px'; // Center
+            popup.style.top = (faultY - 140) + 'px';
+
+            setTimeout(() => popup.classList.add('active'), 50);
+
+            // Restart after delay
+            setTimeout(animate, 4000);
+        }
+
+        window.addEventListener('resize', resize);
+        window.onload = () => {
+            startRolling(); // Start Version A text loop
+            resize();
+            animate();      // Start Version B animation loop
+        };
+
+    </script>
+</body>
+
+</html>
