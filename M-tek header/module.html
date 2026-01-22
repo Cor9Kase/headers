@@ -34,11 +34,11 @@
         <div class="main-content">
             <div class="text-column">
                 <h1 id="mainTitle" class="text-3xl lg:text-5xl font-extrabold text-mtek-navy mb-4">
-                    M-TEK feilsøker <span id="rollingWord">varmekabler</span>
+                    M-TEK – Eksperter på <span id="rollingWord">varmekabler</span>
                 </h1>
                 <p id="mainDescription" class="text-gray-600 mb-8 text-lg lg:text-xl leading-relaxed">
-                    Vi hjelper deg å ta vare på det du har. Med over 35 års erfaring innen elektrotekniske
-                    måletjenester, finner vi feilen og reparerer den lokalt – uten unødvendig riving.
+                    Vi hjelper deg å ta vare på det du har. Over 90% av våre oppdrag er feilsøking og
+                    reparasjon av varmekabler. Vi finner feilen og reparerer den lokalt – uten unødvendig riving.
                 </p>
 
                 <div class="flex flex-col sm:flex-row items-start gap-4">
@@ -76,79 +76,12 @@
                 <div id="default-bg"></div>
                 <div id="zoom-overlay"></div>
                 <div class="technical-grid"></div>
-
-                <!-- Interaktive knapper for tjenester -->
-                <div class="interactive-node" data-key="varmekabler" data-pos-x="30" data-pos-y="65">
-                    <div class="node-button">
-                        <div class="pulse"></div>
-                        <span>Varmekabler</span>
-                    </div>
-                </div>
-
-                <div class="interactive-node" data-key="kraftkabler" data-pos-x="75" data-pos-y="45">
-                    <div class="node-button">
-                        <div class="pulse"></div>
-                        <span>Kraftkabler</span>
-                    </div>
-                </div>
-
-                <div class="interactive-node" data-key="termografering" data-pos-x="50" data-pos-y="30">
-                    <div class="node-button">
-                        <div class="pulse"></div>
-                        <span>Termografering</span>
-                    </div>
-                </div>
-
-                <div class="interactive-node" data-key="lokalisering" data-pos-x="25" data-pos-y="35">
-                    <div class="node-button">
-                        <div class="pulse"></div>
-                        <span>Lokalisering</span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
-
     <script>
-        const canvasColumn = document.getElementById('canvasColumn');
         const defaultBg = document.getElementById('default-bg');
-        const zoomOverlay = document.getElementById('zoom-overlay');
-        const mainTitle = document.getElementById('mainTitle');
-        const mainDescription = document.getElementById('mainDescription');
-        const nodes = document.querySelectorAll('.interactive-node');
-
-        const imageMap = {
-            'default': 'assets/default_bg.png',
-            'varmekabler': 'assets/varmekabler.png',
-            'kraftkabler': 'assets/kraftkabler.png',
-            'termografering': 'assets/termografering.png',
-            'lokalisering': 'assets/lokalisering.png'
-        };
-
-        const contentMap = {
-            'default': {
-                title: 'M-TEK feilsøker <span id="rollingWord">varmekabler</span>',
-                description: 'Vi hjelper deg å ta vare på det du har. Med over 35 års erfaring innen elektrotekniske måletjenester, finner vi feilen og reparerer den lokalt – uten unødvendig riving.'
-            },
-            'varmekabler': {
-                title: 'Reparasjon av <span class="text-blue-600">varmekabler</span>',
-                description: 'Vi finner nøyaktig bruddsted i varmekabler og varmematter. Ved å reparere lokalt slipper du å rive hele badet, noe som sparer deg for både tid og store kostnader.'
-            },
-            'kraftkabler': {
-                title: 'Feilsøking på <span class="text-blue-600">kraftkabel</span>',
-                description: 'Vi utfører avansert feilsøking på kraftkabler for industri, elverk og offentlige bygg. Vår kompetanse sikrer rask lokalisering av feil på kritiske installasjoner.'
-            },
-            'termografering': {
-                title: 'Sikker <span class="text-blue-600">termografering</span>',
-                description: 'Vår termografering avdekker varmegang og brannfare i elektriske anlegg før skaden oppstår. En trygg og effektiv metode for forebyggende vedlikehold.'
-            },
-            'lokalisering': {
-                title: 'Presis <span class="text-blue-600">lokalisering</span>',
-                description: 'Vi finner nøyaktig trase og posisjon for skjulte kabler og rør under bakken eller i vegger. Unngå dyre feilgravinger og skader ved anleggsarbeid.'
-            }
-        };
-
-        const rollingWords = ["varmekabler", "kraftkabler", "elektriske anlegg", "rørtraseer"];
+        const rollingWords = ["varmekabler", "varmematter", "varmefolie", "reparasjon"];
         let rollingIndex = 0;
         let rollingInterval = null;
 
@@ -158,11 +91,6 @@
                 rollingIndex = (rollingIndex + 1) % rollingWords.length;
                 updateRollingWord(rollingWords[rollingIndex]);
             }, 3000);
-        }
-
-        function stopRolling() {
-            clearInterval(rollingInterval);
-            rollingInterval = null;
         }
 
         function updateRollingWord(word) {
@@ -179,63 +107,6 @@
                 }, 50);
             }, 300);
         }
-
-        function positionNodes() {
-            nodes.forEach(node => {
-                node.style.left = node.dataset.posX + '%';
-                node.style.top = node.dataset.posY + '%';
-            });
-        }
-
-        function handleNodeHover(node) {
-            const key = node.dataset.key;
-            const content = contentMap[key];
-
-            stopRolling();
-
-            // Update Text
-            mainTitle.innerHTML = content.title;
-            mainDescription.textContent = content.description;
-
-            // Update Image
-            const imageUrl = imageMap[key];
-            zoomOverlay.style.backgroundImage = `url('${imageUrl}')`;
-            zoomOverlay.style.opacity = '1';
-
-            // Zoom effect
-            const zoomX = node.dataset.posX;
-            const zoomY = node.dataset.posY;
-            defaultBg.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-            zoomOverlay.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-            defaultBg.style.transform = 'scale(1.4)';
-            zoomOverlay.style.transform = 'scale(1.4)';
-
-            // Fade out other nodes
-            nodes.forEach(n => {
-                if (n !== node) n.style.opacity = '0';
-            });
-        }
-
-        function resetState() {
-            const content = contentMap['default'];
-            mainTitle.innerHTML = content.title;
-            mainDescription.textContent = content.description;
-
-            zoomOverlay.style.opacity = '0';
-            defaultBg.style.transform = 'scale(1)';
-            zoomOverlay.style.transform = 'scale(1)';
-
-            nodes.forEach(n => {
-                n.style.opacity = '1';
-            });
-
-            startRolling();
-        }
-
-        nodes.forEach(node => {
-            node.addEventListener('mouseenter', () => handleNodeHover(node));
-            node.addEventListener('mouseleave', resetState);
-        });
 
         // Magnetic Button Logic
         function initMagneticButtons() {
@@ -255,12 +126,12 @@
 
         // Initialize
         window.onload = () => {
-            positionNodes();
             startRolling();
             initMagneticButtons();
 
             // Default background
-            defaultBg.style.backgroundImage = `url('${imageMap['default']}')`;
+            const defaultBgUrl = 'assets/varmekabler.png'; // Updated to use the most relevant image as default
+            defaultBg.style.backgroundImage = `url('${defaultBgUrl}')`;
         };
     </script>
 </body>
