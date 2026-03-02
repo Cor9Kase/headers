@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M-tek Header</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="./three.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --orange: #56c8bd;
+      --orange-l: #42b7ac;
+      --dark: #213438;
+      --mid: #34535a;
+      --muted: #6f878c;
+      --border: #a5bcc0;
+    }
+
+    body {
+      background: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .hero {
+      min-height: 92vh;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 80px 60px;
+      display: grid;
+      grid-template-columns: 1.06fr 0.94fr;
+      grid-template-areas:
+        "text visual"
+        "actions visual"
+        "stats visual";
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-copy {
+      grid-area: text;
+      max-width: 650px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #def2ef;
+      border: 1px solid #9ed5cf;
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--orange);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .bdot {
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      animation: blink 2s ease infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .3;
+      }
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 3.5vw, 3.5rem);
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1.12;
+      letter-spacing: -.03em;
+      margin-bottom: 22px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--orange);
+      white-space: nowrap;
+    }
+
+    .desc {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--mid);
+      max-width: 440px;
+      margin-bottom: 0;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .actions {
+      grid-area: actions;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-self: start;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .btn-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 15px 28px;
+      background: var(--orange);
+      color: #fff;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(52, 111, 106, 0.24);
+      transition: background .2s, transform .2s, box-shadow .2s;
+    }
+
+    .btn-main:hover {
+      background: var(--orange-l);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 28px rgba(52, 111, 106, 0.33);
+    }
+
+    .btn-main svg {
+      transition: transform .2s;
+    }
+
+    .btn-main:hover svg {
+      transform: translateX(3px);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 15px 20px;
+      background: transparent;
+      color: var(--mid);
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 500;
+      border: 1.5px solid var(--mid);
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--dark);
+      background: rgba(86, 200, 189, 0.1);
+      color: var(--dark);
+    }
+
+    .stats {
+      grid-area: stats;
+      display: flex;
+      gap: 36px;
+      margin-top: 8px;
+      padding-top: 28px;
+      border-top: 1.5px solid var(--border);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .sv {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--dark);
+      letter-spacing: -.03em;
+    }
+
+    .sl {
+      font-size: .73rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-top: 3px;
+    }
+
+    .visual {
+      grid-area: visual;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      opacity: 0;
+      overflow: visible;
+    }
+
+    .card {
+      width: min(680px, 100%);
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      overflow: visible;
+    }
+
+    .floor-scene {
+      position: relative;
+      height: 520px;
+      background: transparent;
+      border-radius: 0;
+      overflow: visible;
+      cursor: grab;
+    }
+
+    .floor-scene canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .scene-vignette {
+      display: none;
+    }
+
+    .scene-label {
+      position: absolute;
+      left: 20px;
+      bottom: 18px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #1e2a3d;
+      background: rgba(246, 249, 255, 0.82);
+      border: 1px solid rgba(58, 76, 112, 0.2);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .thermostat-chip {
+      position: absolute;
+      top: 34px;
+      right: 14px;
+      min-width: 98px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(247, 250, 255, 0.9);
+      border: 1px solid rgba(74, 74, 90, 0.16);
+      box-shadow: 0 3px 10px rgba(28, 28, 40, 0.08);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 12px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .thermostat-temp {
+      margin-top: 0;
+      font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #5c7eb7;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1, "zero" 1;
+    }
+
+    @media (max-width: 980px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "text"
+          "visual"
+          "actions"
+          "stats";
+        padding: 56px 24px;
+        gap: 24px;
+      }
+
+      .hero-copy {
+        max-width: 100%;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 580px;
+      }
+
+      .visual {
+        justify-content: center;
+      }
+
+      .floor-scene {
+        height: clamp(230px, 58vw, 320px);
+      }
+
+      .stats {
+        margin-top: 0;
+        padding-top: 20px;
+        gap: 24px;
+      }
+
+      .thermostat-chip {
+        top: 14px;
+        right: 12px;
+        min-width: 88px;
+        height: 38px;
+        padding: 5px 10px;
+      }
+
+      .thermostat-temp {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero-content {
+        padding: 42px 16px;
+        gap: 18px;
+      }
+
+      .desc {
+        margin-bottom: 0;
+      }
+
+      .actions {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+      }
+
+      .actions .btn-main,
+      .actions .btn-ghost {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .stats {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .stats>div {
+        min-width: 30%;
+      }
+
+      .sv {
+        font-size: 1.2rem;
+      }
+
+      .sl {
+        font-size: .66rem;
+      }
+
+      .thermostat-chip {
+        top: 10px;
+        right: 10px;
+        min-width: 82px;
+        height: 34px;
+      }
+
+      .thermostat-temp {
+        font-size: .93rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-copy">
+        <h1>Kaldt gulv?<br>Vi fikser <em>varmekabelen</em>.</h1>
+        <p class="desc">Vi finner hvor feilen ligger og reparerer den — uten unødig riving og uten lang ventetid.</p>
+      </div>
+
+      <div class="visual">
+        <div class="card">
+          <div class="floor-scene" id="floorScene">
+            <div class="scene-vignette"></div>
+            <div class="thermostat-chip" id="thermostatChip">
+              <div class="thermostat-temp" id="thermostatTemp">14°C</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href="#kontakt" class="btn-main">Kontakt oss
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </a>
+        <a href="#tjenester" class="btn-ghost">Få et prisestimat</a>
+      </div>
+
+      <div class="stats">
+        <div>
+          <div class="sv">500+</div>
+          <div class="sl">Reparasjoner</div>
+        </div>
+        <div>
+          <div class="sv">Spar miljøet</div>
+          <div class="sl">Med reparasjon</div>
+        </div>
+        <div>
+          <div class="sv">&lt;24t</div>
+          <div class="sl">Responstid</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function buildIntro() {
+      const intro = gsap.timeline();
+      intro.to('h1', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.35);
+      intro.to('.desc', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.5);
+      intro.to('.actions', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.65);
+      intro.to('.stats', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.8);
+      intro.to('.visual', { opacity: 1, duration: 0.8, ease: 'power2.out' }, 0.4);
+      return intro;
+    }
+
+    function setSceneLabel(text) {
+      const label = document.getElementById('sceneLabel');
+      if (label) {
+        label.textContent = text;
+      }
+    }
+
+    function loadThreeLibrary() {
+      if (window.THREE) {
+        return Promise.resolve();
+      }
+
+      const sources = [
+        './three.min.js',
+        'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js',
+        'https://unpkg.com/three@0.158.0/build/three.min.js'
+      ];
+
+      return new Promise((resolve, reject) => {
+        let index = 0;
+
+        function tryNext() {
+          if (index >= sources.length) {
+            reject(new Error('Kunne ikke laste three.js fra noen kilde.'));
+            return;
+          }
+
+          const script = document.createElement('script');
+          script.src = sources[index];
+          script.async = true;
+          script.onload = () => {
+            if (window.THREE) {
+              resolve();
+            } else {
+              index += 1;
+              tryNext();
+            }
+          };
+          script.onerror = () => {
+            index += 1;
+            tryNext();
+          };
+          document.head.appendChild(script);
+        }
+
+        tryNext();
+      });
+    }
+
+    function buildIsometricRoom() {
+      const container = document.getElementById('floorScene');
+      if (!container || !window.THREE) {
+        return;
+      }
+      const thermostatChipEl = document.getElementById('thermostatChip');
+      const thermostatTempEl = document.getElementById('thermostatTemp');
+
+      const THREE = window.THREE;
+      let renderer;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isMobileViewport = window.matchMedia('(max-width: 980px)').matches;
+
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      } catch (error) {
+        setSceneLabel('3D er ikke tilgjengelig i denne nettleseren.');
+        console.error(error);
+        return;
+      }
+
+      const maxPixelRatio = prefersReducedMotion ? 1.25 : (isMobileViewport ? 1.5 : 2);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxPixelRatio));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      if ('outputColorSpace' in renderer && THREE.SRGBColorSpace) {
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+      }
+      renderer.setClearColor(0x000000, 0);
+      container.prepend(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      scene.background = null;
+
+      const frustumSize = 9.9;
+      const cameraBase = { x: 6.2, y: 5.75, z: 6.05, lookY: -0.16 };
+      const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 70);
+      camera.position.set(cameraBase.x, cameraBase.y, cameraBase.z);
+      camera.lookAt(0, cameraBase.lookY, 0);
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+      scene.add(ambientLight);
+
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.06);
+      keyLight.position.set(6.4, 8.1, 6.0);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(1024, 1024);
+      keyLight.shadow.camera.near = 1;
+      keyLight.shadow.camera.far = 24;
+      keyLight.shadow.camera.left = -8;
+      keyLight.shadow.camera.right = 8;
+      keyLight.shadow.camera.top = 8;
+      keyLight.shadow.camera.bottom = -8;
+      scene.add(keyLight);
+
+      const rimLight = new THREE.DirectionalLight(0x7b8fff, 0.42);
+      rimLight.position.set(-6.9, 4.2, -5.2);
+      scene.add(rimLight);
+
+      const floatingDeck = new THREE.Group();
+      scene.add(floatingDeck);
+
+      const tileSize = 1.65;
+      const tileGap = 0.05;
+      const tileHeight = 0.12;
+      const tileRows = 4;
+      const tileCols = 4;
+      const tilePitch = tileSize + tileGap;
+      const tileStart = -((tileCols - 1) * tilePitch) * 0.5;
+      const tileSpan = tileCols * tileSize + (tileCols - 1) * tileGap;
+      const layerSize = tileSpan;
+      const centerScanCells = [
+        { row: 1, col: 1 },
+        { row: 1, col: 2 },
+        { row: 2, col: 2 },
+        { row: 2, col: 1 }
+      ];
+      const centerScanCellKeys = new Set(centerScanCells.map((cell) => `${cell.row},${cell.col}`));
+      const focusTileCell = { row: 1, col: 1 };
+      const focusTileKey = `${focusTileCell.row},${focusTileCell.col}`;
+      const focusTileX = tileStart + focusTileCell.col * tilePitch;
+      const focusTileZ = tileStart + focusTileCell.row * tilePitch;
+      const scanAreaCenterX = tileStart + tilePitch * 1.5;
+      const scanAreaCenterZ = tileStart + tilePitch * 1.5;
+      const centerPatch = tileSize - 0.1;
+      const frameOuter = centerPatch + 0.16;
+
+      const deckWood = new THREE.Mesh(
+        new THREE.BoxGeometry(layerSize, 0.48, layerSize),
+        new THREE.MeshStandardMaterial({ color: 0x99633b, roughness: 0.76, metalness: 0.09 })
+      );
+      deckWood.position.y = -0.73;
+      deckWood.castShadow = true;
+      deckWood.receiveShadow = true;
+      floatingDeck.add(deckWood);
+
+      const deckInsulation = new THREE.Mesh(
+        new THREE.BoxGeometry(layerSize, 0.085, layerSize),
+        new THREE.MeshStandardMaterial({ color: 0xb7b9ff, roughness: 0.62, metalness: 0.03 })
+      );
+      deckInsulation.position.y = -0.46;
+      deckInsulation.castShadow = true;
+      deckInsulation.receiveShadow = true;
+      floatingDeck.add(deckInsulation);
+
+      const underlayTextureCanvas = document.createElement('canvas');
+      underlayTextureCanvas.width = 256;
+      underlayTextureCanvas.height = 256;
+      const underlayCtx = underlayTextureCanvas.getContext('2d');
+      underlayCtx.fillStyle = '#2d3a54';
+      underlayCtx.fillRect(0, 0, 256, 256);
+
+      for (let i = 0; i < 2200; i += 1) {
+        const x = Math.random() * 256;
+        const y = Math.random() * 256;
+        const tone = 74 + Math.floor(Math.random() * 36);
+        const alpha = 0.03 + Math.random() * 0.04;
+        underlayCtx.fillStyle = `rgba(${tone}, ${tone + 5}, ${tone + 16}, ${alpha})`;
+        underlayCtx.fillRect(x, y, 1.1, 1.1);
+      }
+
+      for (let i = 0; i < 42; i += 1) {
+        underlayCtx.strokeStyle = `rgba(130, 150, 178, ${0.03 + Math.random() * 0.03})`;
+        underlayCtx.lineWidth = 0.45 + Math.random() * 0.45;
+        underlayCtx.beginPath();
+        const y = Math.random() * 256;
+        underlayCtx.moveTo(0, y);
+        underlayCtx.lineTo(256, y + (Math.random() - 0.5) * 14);
+        underlayCtx.stroke();
+      }
+
+      const underlayTexture = new THREE.CanvasTexture(underlayTextureCanvas);
+      if ('colorSpace' in underlayTexture && THREE.SRGBColorSpace) {
+        underlayTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+      underlayTexture.wrapS = THREE.RepeatWrapping;
+      underlayTexture.wrapT = THREE.RepeatWrapping;
+      underlayTexture.repeat.set(3.2, 3.2);
+      underlayTexture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+
+      const deckTop = new THREE.Mesh(
+        new THREE.BoxGeometry(layerSize, 0.08, layerSize),
+        new THREE.MeshStandardMaterial({
+          color: 0x2a3448,
+          map: underlayTexture,
+          bumpMap: underlayTexture,
+          bumpScale: 0.011,
+          roughness: 0.52,
+          metalness: 0.16
+        })
+      );
+      deckTop.position.y = -0.38;
+      deckTop.castShadow = true;
+      deckTop.receiveShadow = true;
+      floatingDeck.add(deckTop);
+
+      const groutBed = new THREE.Mesh(
+        new THREE.BoxGeometry(layerSize, 0.045, layerSize),
+        new THREE.MeshStandardMaterial({
+          color: 0x323f59,
+          map: underlayTexture,
+          bumpMap: underlayTexture,
+          bumpScale: 0.007,
+          roughness: 0.66,
+          metalness: 0.03
+        })
+      );
+      groutBed.position.y = -0.315;
+      groutBed.receiveShadow = true;
+      floatingDeck.add(groutBed);
+
+      const cavityFloor = new THREE.Mesh(
+        new THREE.BoxGeometry(centerPatch - 0.16, 0.05, centerPatch - 0.16),
+        new THREE.MeshStandardMaterial({ color: 0x161d2b, roughness: 0.58, metalness: 0.2 })
+      );
+      cavityFloor.position.set(focusTileX, -0.325, focusTileZ);
+      cavityFloor.receiveShadow = true;
+      floatingDeck.add(cavityFloor);
+
+      const frameMaterial = new THREE.MeshStandardMaterial({ color: 0x1f2c3c, roughness: 0.36, metalness: 0.45 });
+      [
+        { sx: frameOuter, sy: 0.08, sz: 0.1, x: focusTileX, y: -0.03, z: focusTileZ - frameOuter * 0.5 },
+        { sx: frameOuter, sy: 0.08, sz: 0.1, x: focusTileX, y: -0.03, z: focusTileZ + frameOuter * 0.5 },
+        { sx: 0.1, sy: 0.08, sz: frameOuter, x: focusTileX - frameOuter * 0.5, y: -0.03, z: focusTileZ },
+        { sx: 0.1, sy: 0.08, sz: frameOuter, x: focusTileX + frameOuter * 0.5, y: -0.03, z: focusTileZ }
+      ].forEach((part) => {
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(part.sx, part.sy, part.sz), frameMaterial);
+        mesh.position.set(part.x, part.y, part.z);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        floatingDeck.add(mesh);
+      });
+
+      const cableMargin = 0.13;
+      const scanPatchSize = tileSize * 2 + tileGap - 0.12;
+      const cableTrackSize = scanPatchSize - cableMargin * 2;
+      const cableExtent = cableTrackSize * 0.5;
+      const cableStep = cableTrackSize * 0.25;
+      const cablePoints = [
+        new THREE.Vector3(scanAreaCenterX - cableExtent, -0.235, scanAreaCenterZ - cableExtent),
+        new THREE.Vector3(scanAreaCenterX + cableExtent, -0.235, scanAreaCenterZ - cableExtent),
+        new THREE.Vector3(scanAreaCenterX + cableExtent, -0.235, scanAreaCenterZ - cableExtent + cableStep),
+        new THREE.Vector3(scanAreaCenterX - cableExtent, -0.235, scanAreaCenterZ - cableExtent + cableStep),
+        new THREE.Vector3(scanAreaCenterX - cableExtent, -0.235, scanAreaCenterZ - cableExtent + cableStep * 2),
+        new THREE.Vector3(scanAreaCenterX + cableExtent, -0.235, scanAreaCenterZ - cableExtent + cableStep * 2),
+        new THREE.Vector3(scanAreaCenterX + cableExtent, -0.235, scanAreaCenterZ - cableExtent + cableStep * 3),
+        new THREE.Vector3(scanAreaCenterX - cableExtent, -0.235, scanAreaCenterZ - cableExtent + cableStep * 3),
+        new THREE.Vector3(scanAreaCenterX - cableExtent, -0.235, scanAreaCenterZ + cableExtent)
+      ];
+      const cableCurve = new THREE.CatmullRomCurve3(cablePoints, false, 'catmullrom', 0.01);
+      const cableRadius = 0.05;
+      const cableGlowRadius = 0.11;
+      const cableGeometry = new THREE.TubeGeometry(cableCurve, 220, cableRadius, 12, false);
+      const cableMaterial = new THREE.MeshStandardMaterial({
+        color: 0x00b4f0,
+        emissive: 0x00465a,
+        emissiveIntensity: 0.8,
+        roughness: 0.3,
+        metalness: 0.22
+      });
+      const cable = new THREE.Mesh(cableGeometry, cableMaterial);
+      cable.castShadow = true;
+      floatingDeck.add(cable);
+
+      const cableGlowMaterial = new THREE.MeshBasicMaterial({ color: 0xff844f, transparent: true, opacity: 0.08 });
+      const cableGlow = new THREE.Mesh(
+        new THREE.TubeGeometry(cableCurve, 220, cableGlowRadius, 18, false),
+        cableGlowMaterial
+      );
+      floatingDeck.add(cableGlow);
+
+      // Keep x-ray and real heating cable identical so scan result matches opened tile.
+      const xrayCableCurve = cableCurve.clone();
+      const xrayCableMaterial = new THREE.MeshBasicMaterial({ color: 0x67ddff, transparent: true, opacity: 0 });
+      xrayCableMaterial.depthWrite = false;
+      const xrayCable = new THREE.Mesh(
+        new THREE.TubeGeometry(xrayCableCurve, 400, cableRadius, 12, false),
+        xrayCableMaterial
+      );
+      xrayCable.renderOrder = 3;
+      xrayCable.visible = false;
+      floatingDeck.add(xrayCable);
+
+      const xrayCableGlowMaterial = new THREE.MeshBasicMaterial({ color: 0x57cbff, transparent: true, opacity: 0 });
+      xrayCableGlowMaterial.depthWrite = false;
+      const xrayCableGlow = new THREE.Mesh(
+        new THREE.TubeGeometry(xrayCableCurve, 400, cableGlowRadius, 16, false),
+        xrayCableGlowMaterial
+      );
+      xrayCableGlow.renderOrder = 2;
+      xrayCableGlow.visible = false;
+      floatingDeck.add(xrayCableGlow);
+
+      const xrayPatchMaterial = new THREE.MeshBasicMaterial({ color: 0x2f4c75, transparent: true, opacity: 0 });
+      xrayPatchMaterial.depthWrite = false;
+      const xrayPatch = new THREE.Mesh(
+        new THREE.BoxGeometry(scanPatchSize - 0.05, 0.02, scanPatchSize - 0.05),
+        xrayPatchMaterial
+      );
+      xrayPatch.position.set(scanAreaCenterX, -0.31, scanAreaCenterZ);
+      xrayPatch.visible = false;
+      floatingDeck.add(xrayPatch);
+
+      const floorTileGeometry = new THREE.BoxGeometry(tileSize, tileHeight, tileSize);
+      const tileTextureCanvas = document.createElement('canvas');
+      tileTextureCanvas.width = 256;
+      tileTextureCanvas.height = 256;
+      const tileCtx = tileTextureCanvas.getContext('2d');
+      tileCtx.fillStyle = '#f6f7f8';
+      tileCtx.fillRect(0, 0, 256, 256);
+
+      for (let i = 0; i < 16; i += 1) {
+        const cx = Math.random() * 256;
+        const cy = Math.random() * 256;
+        const radius = 30 + Math.random() * 52;
+        const alpha = 0.01 + Math.random() * 0.02;
+        const softPatch = tileCtx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        softPatch.addColorStop(0, `rgba(255, 255, 255, ${alpha})`);
+        softPatch.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        tileCtx.fillStyle = softPatch;
+        tileCtx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+      }
+
+      for (let i = 0; i < 2600; i += 1) {
+        const x = Math.random() * 256;
+        const y = Math.random() * 256;
+        const alpha = 0.02 + Math.random() * 0.035;
+        const gray = 205 + Math.floor(Math.random() * 30);
+        tileCtx.fillStyle = `rgba(${gray}, ${gray}, ${gray + 2}, ${alpha})`;
+        tileCtx.fillRect(x, y, 1.2, 1.2);
+      }
+
+      for (let i = 0; i < 7; i += 1) {
+        tileCtx.strokeStyle = `rgba(225, 228, 232, ${0.09 + Math.random() * 0.08})`;
+        tileCtx.lineWidth = 0.7 + Math.random() * 0.6;
+        tileCtx.beginPath();
+        const startY = Math.random() * 256;
+        tileCtx.moveTo(0, startY);
+        tileCtx.bezierCurveTo(
+          64, startY + (Math.random() - 0.5) * 28,
+          192, startY + (Math.random() - 0.5) * 28,
+          256, startY + (Math.random() - 0.5) * 18
+        );
+        tileCtx.stroke();
+      }
+
+      for (let i = 0; i < 20; i += 1) {
+        tileCtx.strokeStyle = `rgba(197, 202, 210, ${0.025 + Math.random() * 0.03})`;
+        tileCtx.lineWidth = 0.4 + Math.random() * 0.35;
+        tileCtx.beginPath();
+        const x0 = Math.random() * 256;
+        const y0 = Math.random() * 256;
+        tileCtx.moveTo(x0, y0);
+        tileCtx.lineTo(x0 + 18 + Math.random() * 28, y0 + (Math.random() - 0.5) * 12);
+        tileCtx.stroke();
+      }
+
+      const tileTexture = new THREE.CanvasTexture(tileTextureCanvas);
+      if ('colorSpace' in tileTexture && THREE.SRGBColorSpace) {
+        tileTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+      tileTexture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+
+      const tileBaseMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0xeaf2ff,
+        map: tileTexture,
+        bumpMap: tileTexture,
+        bumpScale: 0.02,
+        roughness: 0.28,
+        metalness: 0.02,
+        clearcoat: 0.45,
+        clearcoatRoughness: 0.35
+      });
+      const openCells = new Set([focusTileKey]);
+      const allTiles = [];
+      const tiles = [];
+      let animatedTileIndex = 0;
+      const stackBase = new THREE.Vector3(-2.26, 0.28, -0.86);
+      const stackStep = new THREE.Vector3(0.035, 0.115, 0.03);
+      const stackRotation = new THREE.Vector3(-0.16, 0, -0.05);
+
+      for (let row = 0; row < tileRows; row += 1) {
+        for (let col = 0; col < tileCols; col += 1) {
+          const x = tileStart + col * tilePitch;
+          const z = tileStart + row * tilePitch;
+          const cellKey = `${row},${col}`;
+          const material = tileBaseMaterial.clone();
+          const toneJitter = (Math.random() - 0.5) * 0.02;
+          material.color.offsetHSL(0, 0, toneJitter);
+          material.transparent = true;
+          material.opacity = 1;
+          material.depthWrite = true;
+
+          const tile = new THREE.Mesh(floorTileGeometry, material);
+          tile.position.set(x, -0.01, z);
+          tile.castShadow = true;
+          tile.receiveShadow = true;
+          tile.renderOrder = 6;
+          floatingDeck.add(tile);
+          allTiles.push({
+            mesh: tile,
+            toneJitter,
+            isFocus: cellKey === focusTileKey,
+            isScanArea: centerScanCellKeys.has(cellKey)
+          });
+
+          if (!openCells.has(cellKey)) {
+            continue;
+          }
+
+          const openX = stackBase.x + animatedTileIndex * stackStep.x;
+          const openY = stackBase.y + animatedTileIndex * stackStep.y;
+          const openZ = stackBase.z + animatedTileIndex * stackStep.z;
+
+          tiles.push({
+            mesh: tile,
+            home: new THREE.Vector3(x, -0.01, z),
+            open: new THREE.Vector3(openX, openY, openZ),
+            openRotX: stackRotation.x,
+            openRotY: stackRotation.y,
+            openRotZ: stackRotation.z
+          });
+          animatedTileIndex += 1;
+        }
+      }
+
+      const probe = new THREE.Mesh(
+        new THREE.SphereGeometry(0.095, 24, 24),
+        new THREE.MeshBasicMaterial({ color: 0x2baeff, transparent: true, opacity: 0.92 })
+      );
+      probe.position.copy(cableCurve.getPoint(0));
+      probe.position.y += 0.15;
+      probe.visible = false;
+      floatingDeck.add(probe);
+
+      const scanCanvas = document.createElement('canvas');
+      scanCanvas.width = 128;
+      scanCanvas.height = 128;
+      const scanCtx = scanCanvas.getContext('2d');
+      scanCtx.clearRect(0, 0, 128, 128);
+      const scanGlow = scanCtx.createRadialGradient(64, 64, 8, 64, 64, 54);
+      scanGlow.addColorStop(0, 'rgba(134, 245, 255, 0.6)');
+      scanGlow.addColorStop(0.56, 'rgba(72, 194, 255, 0.2)');
+      scanGlow.addColorStop(1, 'rgba(72, 194, 255, 0)');
+      scanCtx.fillStyle = scanGlow;
+      scanCtx.fillRect(0, 0, 128, 128);
+      scanCtx.strokeStyle = 'rgba(133, 234, 255, 0.95)';
+      scanCtx.lineWidth = 5.4;
+      scanCtx.beginPath();
+      scanCtx.arc(64, 64, 34, 0, Math.PI * 2);
+      scanCtx.stroke();
+      scanCtx.strokeStyle = 'rgba(133, 234, 255, 0.32)';
+      scanCtx.lineWidth = 2;
+      scanCtx.beginPath();
+      scanCtx.arc(64, 64, 46, 0, Math.PI * 2);
+      scanCtx.stroke();
+
+      const scanTexture = new THREE.CanvasTexture(scanCanvas);
+      if ('colorSpace' in scanTexture && THREE.SRGBColorSpace) {
+        scanTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+      const scanMaterial = new THREE.SpriteMaterial({
+        map: scanTexture,
+        transparent: true,
+        opacity: 0,
+        depthTest: false,
+        depthWrite: false
+      });
+      const scanMarker = new THREE.Sprite(scanMaterial);
+      scanMarker.scale.set(0.01, 0.01, 1);
+      scanMarker.position.set(focusTileX, 0.2, focusTileZ);
+      scanMarker.visible = false;
+      scanMarker.renderOrder = 11;
+      floatingDeck.add(scanMarker);
+
+      const xrayCanvas = document.createElement('canvas');
+      xrayCanvas.width = 128;
+      xrayCanvas.height = 128;
+      const xrayCtx = xrayCanvas.getContext('2d');
+      xrayCtx.clearRect(0, 0, 128, 128);
+      const xrayGlow = xrayCtx.createRadialGradient(64, 64, 6, 64, 64, 56);
+      xrayGlow.addColorStop(0, 'rgba(116, 232, 255, 0.64)');
+      xrayGlow.addColorStop(0.62, 'rgba(65, 183, 245, 0.18)');
+      xrayGlow.addColorStop(1, 'rgba(65, 183, 245, 0)');
+      xrayCtx.fillStyle = xrayGlow;
+      xrayCtx.fillRect(0, 0, 128, 128);
+      xrayCtx.strokeStyle = 'rgba(132, 224, 255, 0.9)';
+      xrayCtx.lineWidth = 6;
+      xrayCtx.beginPath();
+      xrayCtx.arc(64, 64, 38, 0, Math.PI * 2);
+      xrayCtx.stroke();
+      xrayCtx.strokeStyle = 'rgba(132, 224, 255, 0.38)';
+      xrayCtx.lineWidth = 2;
+      xrayCtx.beginPath();
+      xrayCtx.arc(64, 64, 52, 0, Math.PI * 2);
+      xrayCtx.stroke();
+
+      const xrayTexture = new THREE.CanvasTexture(xrayCanvas);
+      if ('colorSpace' in xrayTexture && THREE.SRGBColorSpace) {
+        xrayTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+      const xrayMaterial = new THREE.SpriteMaterial({
+        map: xrayTexture,
+        transparent: true,
+        opacity: 0,
+        depthTest: false,
+        depthWrite: false
+      });
+      const xrayMarker = new THREE.Sprite(xrayMaterial);
+      xrayMarker.scale.set(0.01, 0.01, 1);
+      xrayMarker.position.set(focusTileX, 0.2, focusTileZ);
+      xrayMarker.visible = false;
+      xrayMarker.renderOrder = 12;
+      floatingDeck.add(xrayMarker);
+
+      const faultCanvas = document.createElement('canvas');
+      faultCanvas.width = 128;
+      faultCanvas.height = 128;
+      const faultCtx = faultCanvas.getContext('2d');
+      faultCtx.clearRect(0, 0, 128, 128);
+      faultCtx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      faultCtx.strokeStyle = 'rgba(255, 120, 95, 0.95)';
+      faultCtx.lineWidth = 5;
+      faultCtx.beginPath();
+      faultCtx.arc(64, 64, 42, 0, Math.PI * 2);
+      faultCtx.fill();
+      faultCtx.stroke();
+      faultCtx.strokeStyle = '#ff5b43';
+      faultCtx.lineWidth = 11;
+      faultCtx.lineCap = 'round';
+      faultCtx.beginPath();
+      faultCtx.moveTo(46, 46);
+      faultCtx.lineTo(82, 82);
+      faultCtx.moveTo(82, 46);
+      faultCtx.lineTo(46, 82);
+      faultCtx.stroke();
+
+      const faultTexture = new THREE.CanvasTexture(faultCanvas);
+      if ('colorSpace' in faultTexture && THREE.SRGBColorSpace) {
+        faultTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+      const faultMaterial = new THREE.SpriteMaterial({
+        map: faultTexture,
+        transparent: true,
+        opacity: 0,
+        depthTest: false,
+        depthWrite: false
+      });
+      const faultMarker = new THREE.Sprite(faultMaterial);
+      faultMarker.scale.set(0.01, 0.01, 1);
+      faultMarker.position.set(focusTileX, 0.24, focusTileZ);
+      faultMarker.visible = false;
+      faultMarker.renderOrder = 13;
+      floatingDeck.add(faultMarker);
+
+      const fixBadgeCanvas = document.createElement('canvas');
+      fixBadgeCanvas.width = 128;
+      fixBadgeCanvas.height = 128;
+      const fixBadgeCtx = fixBadgeCanvas.getContext('2d');
+      fixBadgeCtx.clearRect(0, 0, 128, 128);
+      fixBadgeCtx.fillStyle = '#ffffff';
+      fixBadgeCtx.strokeStyle = '#d9e2ef';
+      fixBadgeCtx.lineWidth = 6;
+      fixBadgeCtx.beginPath();
+      fixBadgeCtx.arc(64, 64, 46, 0, Math.PI * 2);
+      fixBadgeCtx.fill();
+      fixBadgeCtx.stroke();
+      fixBadgeCtx.strokeStyle = '#25b464';
+      fixBadgeCtx.lineWidth = 10;
+      fixBadgeCtx.lineCap = 'round';
+      fixBadgeCtx.lineJoin = 'round';
+      fixBadgeCtx.beginPath();
+      fixBadgeCtx.moveTo(42, 67);
+      fixBadgeCtx.lineTo(58, 83);
+      fixBadgeCtx.lineTo(88, 50);
+      fixBadgeCtx.stroke();
+
+      const fixBadgeTexture = new THREE.CanvasTexture(fixBadgeCanvas);
+      if ('colorSpace' in fixBadgeTexture && THREE.SRGBColorSpace) {
+        fixBadgeTexture.colorSpace = THREE.SRGBColorSpace;
+      }
+      const fixBadgeMaterial = new THREE.SpriteMaterial({
+        map: fixBadgeTexture,
+        transparent: true,
+        opacity: 0,
+        depthTest: false,
+        depthWrite: false
+      });
+      const fixBadge = new THREE.Sprite(fixBadgeMaterial);
+      fixBadge.scale.set(0.01, 0.01, 1);
+      fixBadge.visible = false;
+      fixBadge.renderOrder = 10;
+      floatingDeck.add(fixBadge);
+
+      const state = {
+        heat: 0,
+        probeT: 0,
+        scanT: 0,
+        tileWarm: 0,
+        fixConfirm: 0,
+        xray: 0,
+        faultMark: 0
+      };
+      const visualState = {
+        heat: 0,
+        scanT: 0,
+        tileWarm: 0,
+        fixConfirm: 0,
+        xray: 0,
+        faultMark: 0
+      };
+      const hover = {
+        x: 0,
+        y: 0,
+        targetX: 0,
+        targetY: 0
+      };
+
+      function updateHoverTarget(event) {
+        const rect = container.getBoundingClientRect();
+        if (!rect.width || !rect.height) {
+          return;
+        }
+
+        const nx = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        const ny = ((event.clientY - rect.top) / rect.height) * 2 - 1;
+        hover.targetX = THREE.MathUtils.clamp(nx, -1, 1);
+        hover.targetY = THREE.MathUtils.clamp(ny, -1, 1);
+      }
+
+      container.addEventListener('pointerenter', updateHoverTarget);
+      container.addEventListener('pointermove', updateHoverTarget);
+      container.addEventListener('pointerleave', () => {
+        hover.targetX = 0;
+        hover.targetY = 0;
+      });
+
+      const animationSpeed = prefersReducedMotion ? 0.54 : (isMobileViewport ? 0.6 : 0.66);
+      const repeatDelay = prefersReducedMotion ? 1.6 : (isMobileViewport ? 1.45 : 1.35);
+      const timeline = gsap.timeline({ repeat: -1, repeatDelay });
+      timeline.timeScale(animationSpeed);
+      setSceneLabel('Flyvende flisgulv i 3D');
+
+      // --- Timeline timing ---
+      // Phase 1: X-ray scan — circle moves over 4 center tiles, cables visible only under circle
+      const scanStart = 0.34;
+      const scanDuration = 2.3;
+      // Phase 2: Fault found — scan stops on last tile, fault marker appears, scan/xray fades out
+      const faultFoundTime = scanStart + scanDuration;
+      const scanFadeTime = faultFoundTime;
+      // Phase 3: Tile opens to reveal cable for repair
+      const tileOpenStart = scanFadeTime + 0.5;
+      const probeScanStart = tileOpenStart + 0.72;
+      const probeScanDuration = 1.45;
+      const fixConfirmStart = probeScanStart + probeScanDuration + 0.01;
+      const cableHeatStart = fixConfirmStart + 0.2;
+      const tileHeatDelay = 0.88;
+      const tileCloseStart = 8.1;
+      const cableCoolStart = 8.2;
+      const tileCoolDelay = 1.35;
+      const probeRetractStart = cableCoolStart + 0.55;
+      const cableOffStart = cableCoolStart + 1.75;
+
+      // Tile open/close animations
+      tiles.forEach((tile, i) => {
+        const t = tileOpenStart + i * 0.05;
+        timeline.to(tile.mesh.position, {
+          x: tile.open.x,
+          y: tile.open.y,
+          z: tile.open.z,
+          duration: 0.86,
+          ease: 'sine.inOut'
+        }, t);
+        timeline.to(tile.mesh.rotation, {
+          x: tile.openRotX,
+          y: tile.openRotY,
+          z: tile.openRotZ,
+          duration: 0.86,
+          ease: 'sine.inOut'
+        }, t);
+      });
+
+      // Scan movement: 0→1 over the 4 center tiles
+      timeline.to(state, { scanT: 1, duration: scanDuration, ease: 'none' }, scanStart);
+      // X-ray visibility is controlled separately so scan can stop on last tile before fading
+      timeline.to(state, { xray: 1, duration: 0.22, ease: 'power1.out' }, scanStart);
+      // Fault marker pops in when scan finds the issue
+      timeline.to(state, { faultMark: 1, duration: 0.3, ease: 'back.out(2.3)' }, faultFoundTime);
+      // Scan fades out right when fault is found (without moving backward)
+      timeline.to(state, { xray: 0, duration: 0.22, ease: 'power2.in' }, scanFadeTime);
+      // Fault marker fades just before tile opens
+      timeline.to(state, { faultMark: 0, duration: 0.28, ease: 'power2.in' }, tileOpenStart - 0.15);
+
+      // Probe, fix, heat
+      timeline.to(state, { probeT: 1, duration: probeScanDuration, ease: 'none' }, probeScanStart);
+      timeline.to(state, { fixConfirm: 1, duration: 0.34, ease: 'back.out(2.2)' }, fixConfirmStart);
+      timeline.to(state, { fixConfirm: 0, duration: 0.55, ease: 'power2.inOut' }, fixConfirmStart + 2.25);
+      timeline.to(state, { heat: 1, duration: 1.6, ease: 'sine.inOut' }, cableHeatStart);
+      timeline.to(state, { tileWarm: 1, duration: 1.15, ease: 'sine.out' }, cableHeatStart + tileHeatDelay);
+
+      // Tile close
+      [...tiles].reverse().forEach((tile, i) => {
+        const t = tileCloseStart + i * 0.09;
+        timeline.to(tile.mesh.position, {
+          x: tile.home.x,
+          y: tile.home.y,
+          z: tile.home.z,
+          duration: 0.82,
+          ease: 'sine.inOut'
+        }, t);
+        timeline.to(tile.mesh.rotation, {
+          x: 0,
+          y: 0,
+          z: 0,
+          duration: 0.82,
+          ease: 'sine.inOut'
+        }, t);
+      });
+
+      timeline.to(state, { heat: 0.22, duration: 1.0, ease: 'power2.out' }, cableCoolStart);
+      timeline.to(state, { probeT: 0, duration: 0.95, ease: 'power2.out' }, probeRetractStart);
+      timeline.to(state, { tileWarm: 0, duration: 0.9, ease: 'power2.inOut' }, cableCoolStart + tileCoolDelay);
+      timeline.to(state, { heat: 0, duration: 0.72, ease: 'power2.out' }, cableOffStart);
+
+      const coolColor = new THREE.Color(0x00b7f4);
+      const hotColor = new THREE.Color(0xff6828);
+      const coolEmissive = new THREE.Color(0x004f69);
+      const hotEmissive = new THREE.Color(0xff4a16);
+      const tileColdColor = new THREE.Color(0xe6ecf7);
+      const tileWarmColor = new THREE.Color(0xf7e7d8);
+      const tileBlendColor = new THREE.Color();
+      const tileColdEmissive = new THREE.Color(0x152036);
+      const tileWarmEmissive = new THREE.Color(0x7b4b2f);
+      const tileEmissiveBlend = new THREE.Color();
+      const tileFocusXrayEmissive = new THREE.Color(0x37c3ff);
+      const tileFocusEmissive = new THREE.Color();
+      const tileScanTint = new THREE.Color(0xd8f3ff);
+      const tileScanEmissive = new THREE.Color(0x44ccff);
+      const thermoColdColor = new THREE.Color(0x5b7ab2);
+      const thermoWarmColor = new THREE.Color(0xd86d3e);
+      const thermoBlendColor = new THREE.Color();
+      const faultProbeData = (() => {
+        const candidate = new THREE.Vector3();
+        const best = new THREE.Vector3();
+        const halfTileProbeArea = tileSize * 0.5 - 0.08;
+        let bestDistance = Number.POSITIVE_INFINITY;
+        let bestT = 0.5;
+        let segmentStartT = 1;
+        let segmentEndT = 0;
+        let foundSegment = false;
+        for (let i = 0; i <= 520; i += 1) {
+          const t = i / 520;
+          candidate.copy(cableCurve.getPoint(t));
+          const dx = candidate.x - focusTileX;
+          const dz = candidate.z - focusTileZ;
+          const distanceSq = dx * dx + dz * dz;
+          if (distanceSq < bestDistance) {
+            bestDistance = distanceSq;
+            best.copy(candidate);
+            bestT = t;
+          }
+          if (Math.abs(dx) <= halfTileProbeArea && Math.abs(dz) <= halfTileProbeArea) {
+            foundSegment = true;
+            segmentStartT = Math.min(segmentStartT, t);
+            segmentEndT = Math.max(segmentEndT, t);
+          }
+        }
+        if (!foundSegment) {
+          segmentStartT = Math.max(0, bestT - 0.08);
+          segmentEndT = Math.min(1, bestT + 0.08);
+        }
+        const segmentSpan = Math.max(segmentEndT - segmentStartT, 0.02);
+        const probeStartT = Math.max(0, segmentStartT - segmentSpan * 0.08);
+        const probeEndT = Math.min(1, segmentEndT + segmentSpan * 0.08);
+        return {
+          point: best,
+          probeStartT,
+          probeEndT: Math.max(probeEndT, probeStartT + 0.02)
+        };
+      })();
+      const faultCablePoint = faultProbeData.point;
+      const probeSegmentStartT = faultProbeData.probeStartT;
+      const probeSegmentEndT = faultProbeData.probeEndT;
+      const scanPathLoop = [
+        new THREE.Vector3(tileStart + tilePitch * 2, 0, tileStart + tilePitch * 1),
+        new THREE.Vector3(tileStart + tilePitch * 2, 0, tileStart + tilePitch * 2),
+        new THREE.Vector3(tileStart + tilePitch * 1, 0, tileStart + tilePitch * 2),
+        new THREE.Vector3(tileStart + tilePitch * 1, 0, tileStart + tilePitch * 1)
+      ];
+      const scanPoint = new THREE.Vector3();
+
+      function getScanPoint(progress) {
+        const segCount = scanPathLoop.length - 1;
+        const clamped = THREE.MathUtils.clamp(progress, 0, 1);
+        const segProgress = clamped * segCount;
+        const segIndex = Math.min(Math.floor(segProgress), segCount - 1);
+        const localT = segProgress - segIndex;
+        scanPoint.copy(scanPathLoop[segIndex]).lerp(scanPathLoop[segIndex + 1], localT);
+        return scanPoint;
+      }
+
+      const clock = new THREE.Clock();
+
+      function updateThermostat(level) {
+        if (!thermostatChipEl || !thermostatTempEl) {
+          return;
+        }
+
+        const clamped = THREE.MathUtils.clamp(level, 0, 1);
+        const temperature = Math.round(14 + clamped * 11);
+        thermostatTempEl.textContent = `${temperature.toString().padStart(2, '0')}°C`;
+
+        thermoBlendColor.copy(thermoColdColor).lerp(thermoWarmColor, clamped);
+        const thermoHex = `#${thermoBlendColor.getHexString()}`;
+        thermostatTempEl.style.color = thermoHex;
+        thermostatChipEl.style.borderColor = `${thermoHex}44`;
+      }
+
+      updateThermostat(0);
+
+      function setRendererSize() {
+        const width = Math.max(container.clientWidth, 1);
+        const height = Math.max(container.clientHeight, 1);
+        const aspect = width / height;
+
+        camera.left = -frustumSize * aspect * 0.5;
+        camera.right = frustumSize * aspect * 0.5;
+        camera.top = frustumSize * 0.5;
+        camera.bottom = -frustumSize * 0.5;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+      }
+
+      setRendererSize();
+      window.addEventListener('resize', setRendererSize);
+
+      if (window.ResizeObserver) {
+        const resizeObserver = new ResizeObserver(setRendererSize);
+        resizeObserver.observe(container);
+      }
+
+      function render() {
+        const elapsed = clock.getElapsedTime();
+        const isMobileMotion = container.clientWidth <= 620;
+        const motionScale = prefersReducedMotion ? 0.4 : (isMobileMotion ? 0.72 : 1);
+        const hoverScale = prefersReducedMotion ? 0.55 : (isMobileMotion ? 0.82 : 1);
+        const hoverLerp = prefersReducedMotion ? 0.04 : (isMobileMotion ? 0.046 : 0.055);
+
+        hover.x += (hover.targetX - hover.x) * hoverLerp;
+        hover.y += (hover.targetY - hover.y) * hoverLerp;
+
+        visualState.heat += (state.heat - visualState.heat) * 0.09;
+        visualState.scanT += (state.scanT - visualState.scanT) * 0.16;
+        visualState.tileWarm += (state.tileWarm - visualState.tileWarm) * 0.09;
+        visualState.fixConfirm += (state.fixConfirm - visualState.fixConfirm) * 0.14;
+        visualState.xray += (state.xray - visualState.xray) * 0.14;
+        visualState.faultMark += (state.faultMark - visualState.faultMark) * 0.18;
+
+        camera.position.x = cameraBase.x + Math.sin(elapsed * 0.34) * 0.045 * motionScale + hover.x * 0.16 * hoverScale;
+        camera.position.z = cameraBase.z + Math.cos(elapsed * 0.31) * 0.045 * motionScale + hover.y * 0.12 * hoverScale;
+        camera.position.y = cameraBase.y + Math.sin(elapsed * 0.42) * 0.018 * motionScale - hover.y * 0.06 * hoverScale;
+        camera.lookAt(hover.x * 0.065 * hoverScale, cameraBase.lookY + hover.y * 0.03 * hoverScale, hover.y * 0.045 * hoverScale);
+
+        const idleDriftX = Math.sin(elapsed * 0.21) * 0.018 * motionScale;
+        const idleDriftZ = Math.cos(elapsed * 0.19) * 0.014 * motionScale;
+        const idleTiltX = Math.sin(elapsed * 0.24) * 0.004 * motionScale;
+        const idleLift = Math.cos(elapsed * 0.27) * 0.012 * motionScale;
+
+        floatingDeck.rotation.y = Math.sin(elapsed * 0.17) * 0.011 * motionScale + hover.x * 0.03 * hoverScale;
+        floatingDeck.rotation.x = hover.y * 0.022 * hoverScale + idleTiltX;
+        floatingDeck.position.y = Math.sin(elapsed * 0.62) * 0.028 * motionScale + idleLift;
+        floatingDeck.position.x = idleDriftX;
+        floatingDeck.position.z = idleDriftZ;
+
+        const glowFlicker = visualState.heat > 0
+          ? (Math.sin(elapsed * 10) * 0.06 + Math.sin(elapsed * 6) * 0.04) * motionScale
+          : 0;
+        cableMaterial.color.copy(coolColor).lerp(hotColor, visualState.heat);
+        cableMaterial.emissive.copy(coolEmissive).lerp(hotEmissive, visualState.heat);
+        cableMaterial.emissiveIntensity = 0.68 + visualState.heat * 1.48 + glowFlicker;
+
+        let openFactor = 0;
+        if (tiles.length > 0) {
+          tiles.forEach((tileEntry) => {
+            const travelY = tileEntry.open.y - tileEntry.home.y;
+            const progress = travelY !== 0
+              ? (tileEntry.mesh.position.y - tileEntry.home.y) / travelY
+              : 0;
+            openFactor += THREE.MathUtils.clamp(progress, 0, 1);
+          });
+          openFactor /= tiles.length;
+        }
+
+        const scanPointCurrent = getScanPoint(visualState.scanT);
+        const preOpenVisibility = THREE.MathUtils.clamp(1 - openFactor * 4.5, 0, 1);
+        // scanActive: how strongly the scan circle is present (fades in/out)
+        const scanActive = THREE.MathUtils.clamp(
+          Math.min(visualState.scanT * 5, 1) * visualState.xray * preOpenVisibility,
+          0, 1
+        );
+
+        allTiles.forEach((tileEntry) => {
+          const material = tileEntry.mesh.material;
+          tileBlendColor.copy(tileColdColor).lerp(tileWarmColor, visualState.tileWarm);
+          material.color.copy(tileBlendColor);
+          material.color.offsetHSL(0, 0, tileEntry.toneJitter);
+          tileEmissiveBlend.copy(tileColdEmissive).lerp(tileWarmEmissive, visualState.tileWarm);
+          material.emissive.copy(tileEmissiveBlend);
+          material.emissiveIntensity = 0.01 + visualState.tileWarm * 0.08;
+          let tileReveal = 0;
+
+          // X-ray effect: tile becomes transparent only when scanner is over it
+          if (tileEntry.isScanArea && scanActive > 0.001) {
+            const dx = tileEntry.mesh.position.x - scanPointCurrent.x;
+            const dz = tileEntry.mesh.position.z - scanPointCurrent.z;
+            const scanDistance = Math.hypot(dx, dz);
+            const revealRadius = tileSize * 0.92;
+            const scanPresence = THREE.MathUtils.clamp(1 - scanDistance / revealRadius, 0, 1);
+            const scanIntensity = scanPresence * scanActive;
+            material.color.lerp(tileScanTint, scanIntensity * 0.42);
+            material.emissive.lerp(tileScanEmissive, scanIntensity * 0.46);
+            material.emissiveIntensity += scanIntensity * 0.24;
+            tileReveal = scanIntensity * 1.18;
+          }
+
+          if (tileEntry.isFocus && visualState.faultMark > 0.01) {
+            tileFocusEmissive.copy(material.emissive).lerp(tileFocusXrayEmissive, visualState.faultMark * 0.3);
+            material.emissive.copy(tileFocusEmissive);
+            material.emissiveIntensity += visualState.faultMark * 0.15;
+          }
+
+          const minOpacity = tileEntry.isFocus ? 0.03 : (tileEntry.isScanArea ? 0.06 : 0.2);
+          material.opacity = tileReveal > 0.001
+            ? THREE.MathUtils.clamp(1 - tileReveal, minOpacity, 1)
+            : 1;
+          material.depthWrite = material.opacity > 0.985;
+        });
+
+        const thermostatLevel = Math.max(visualState.heat * 0.9, visualState.tileWarm);
+        updateThermostat(thermostatLevel);
+
+        // X-ray cables and glow: visible when scan is active
+        cableGlowMaterial.opacity = 0.06 + visualState.heat * 0.62 + scanActive * 0.28;
+        cableMaterial.emissiveIntensity += scanActive * 0.7;
+        xrayPatch.material.opacity = scanActive * 0.08;
+        xrayPatch.visible = scanActive > 0.01;
+        xrayCable.material.opacity = scanActive * 0.98;
+        xrayCable.visible = scanActive > 0.01;
+        xrayCableGlow.material.opacity = scanActive * 0.92;
+        xrayCableGlow.visible = scanActive > 0.01;
+
+        // Scan marker (the x-ray circle) — follows scan position
+        const scanMarkerPulse = 0.42 + Math.sin(elapsed * 7.3) * 0.08;
+        const scanMarkerOpacity = THREE.MathUtils.clamp(scanActive * scanMarkerPulse, 0, 0.85);
+        const scanMarkerScale = 1.6 + scanActive * 0.4;
+        scanMarker.position.set(scanPointCurrent.x, 0.2 + openFactor * 0.03, scanPointCurrent.z);
+        scanMarker.scale.set(scanMarkerScale, scanMarkerScale, 1);
+        scanMaterial.opacity = scanMarkerOpacity;
+        scanMarker.visible = scanMarkerOpacity > 0.01;
+
+        // X-ray marker also follows the scan circle (glowing halo)
+        const xrayFollowOpacity = THREE.MathUtils.clamp(
+          scanActive * 0.72 * THREE.MathUtils.clamp(1 - openFactor * 0.55, 0, 1),
+          0, 0.82
+        );
+        const xrayFollowScale = 1.4 + scanActive * 0.8 + Math.sin(elapsed * 6.4) * 0.04 * scanActive;
+        xrayMarker.position.set(scanPointCurrent.x, 0.18 + openFactor * 0.03, scanPointCurrent.z);
+        xrayMarker.scale.set(xrayFollowScale, xrayFollowScale, 1);
+        xrayMaterial.opacity = xrayFollowOpacity;
+        xrayMarker.visible = xrayFollowOpacity > 0.01;
+
+        // Fault marker stays on the focus tile
+        const faultOpacity = visualState.faultMark * THREE.MathUtils.clamp(1 - openFactor * 0.75, 0, 1);
+        const faultScale = 0.45 + visualState.faultMark * 0.62;
+        faultMarker.position.set(focusTileX, 0.23 + openFactor * 0.03, focusTileZ);
+        faultMarker.scale.set(faultScale, faultScale, 1);
+        faultMaterial.opacity = faultOpacity;
+        faultMarker.visible = faultOpacity > 0.01;
+
+        const probeActive = openFactor > 0.08 && state.probeT > 0.015 && state.probeT < 0.995;
+        if (probeActive) {
+          const localProbeT = THREE.MathUtils.lerp(probeSegmentStartT, probeSegmentEndT, THREE.MathUtils.clamp(state.probeT, 0, 1));
+          const probePoint = cableCurve.getPoint(localProbeT);
+          probe.position.set(probePoint.x, probePoint.y + 0.125 + openFactor * 0.035, probePoint.z);
+          probe.material.opacity = 0.72 + visualState.heat * 0.2;
+        } else {
+          probe.material.opacity = 0;
+        }
+        probe.visible = probeActive;
+
+        const fixBadgeOpacity = visualState.fixConfirm * THREE.MathUtils.clamp(openFactor * 1.45, 0, 1);
+        fixBadge.position.set(
+          faultCablePoint.x,
+          faultCablePoint.y + 0.24 + openFactor * 0.03,
+          faultCablePoint.z
+        );
+        fixBadgeMaterial.opacity = fixBadgeOpacity;
+        const fixBadgeScale = 0.01 + fixBadgeOpacity * 0.42;
+        fixBadge.scale.set(fixBadgeScale, fixBadgeScale, 1);
+        fixBadge.visible = fixBadgeOpacity > 0.01;
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(render);
+      }
+
+      render();
+    }
+
+    buildIntro();
+    setSceneLabel('Laster isometrisk 3D...');
+    loadThreeLibrary()
+      .then(() => {
+        buildIsometricRoom();
+      })
+      .catch((error) => {
+        setSceneLabel('Kunne ikke laste 3D-scenen.');
+        console.error(error);
+      });
+  </script>
+</body>
+
+</html>
