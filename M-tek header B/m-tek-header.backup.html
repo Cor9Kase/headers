@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M-tek Header</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --orange: #E8541E;
+      --orange-l: #FF7340;
+      --dark: #1C1C28;
+      --mid: #4A4A5A;
+      --muted: #9A9AAA;
+      --border: #E8E8F0;
+    }
+
+    body {
+      background: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .hero {
+      min-height: 92vh;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    /* ─── LEFT ──────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #FFF3EE;
+      border: 1px solid #FFD4B8;
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--orange);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .bdot {
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      animation: blink 2s ease infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 3.5vw, 3.5rem);
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1.12;
+      letter-spacing: -.03em;
+      margin-bottom: 22px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--orange);
+    }
+
+    .desc {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--mid);
+      max-width: 440px;
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .btn-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 15px 28px;
+      background: var(--orange);
+      color: #fff;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(232, 84, 30, .28);
+      transition: background .2s, transform .2s, box-shadow .2s;
+    }
+
+    .btn-main:hover {
+      background: var(--orange-l);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 28px rgba(232, 84, 30, .38);
+    }
+
+    .btn-main svg {
+      transition: transform .2s;
+    }
+
+    .btn-main:hover svg {
+      transform: translateX(3px);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 15px 20px;
+      background: transparent;
+      color: var(--mid);
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 500;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+
+    .btn-ghost:hover {
+      border-color: #bbb;
+      color: var(--dark);
+    }
+
+    .stats {
+      display: flex;
+      gap: 36px;
+      margin-top: 44px;
+      padding-top: 28px;
+      border-top: 1.5px solid var(--border);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .sv {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--dark);
+      letter-spacing: -.03em;
+    }
+
+    .sl {
+      font-size: .73rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-top: 3px;
+    }
+
+    /* ─── RIGHT CARD ────────────────────────── */
+    .visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+    }
+
+    .card {
+      width: 460px;
+      background: #fff;
+      border: 1.5px solid #EAEAF0;
+      border-radius: 28px;
+      box-shadow: 0 8px 60px rgba(0, 0, 0, .09);
+      overflow: hidden;
+    }
+
+    .floor-scene {
+      position: relative;
+      height: 440px;
+      background: #111118;
+      border-radius: 28px;
+      overflow: hidden;
+      perspective: 900px;
+      perspective-origin: 50% 35%;
+    }
+
+    .floor-scene::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 40% 30%, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .cable-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Thermostat */
+    .thermostat {
+      position: absolute;
+      top: 24px;
+      left: 28px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 14px;
+      padding: 9px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 15;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 8px 32px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.1);
+      color: var(--dark);
+    }
+
+    .therm-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #00B4F0;
+    }
+
+    .therm-display {
+      height: 24px;
+      overflow: hidden;
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 24px;
+      letter-spacing: -0.03em;
+      position: relative;
+    }
+
+    .temp-slider {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .temp-slider div {
+      height: 24px;
+      display: flex;
+      align-items: center;
+    }
+
+
+    /* Drain & puddle */
+    .shower-drain {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      width: 130px;
+      height: 22px;
+      background: linear-gradient(180deg, #B8BEC3 0%, #A0A6AB 40%, #8D9398 100%);
+      border-radius: 3px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 3px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.15);
+      z-index: 14;
+      display: flex;
+      gap: 3px;
+      padding: 5px;
+    }
+
+    .drain-slot {
+      flex: 1;
+      background: linear-gradient(180deg, #0a0a0e, #1C1E20);
+      border-radius: 2px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.95);
+    }
+
+    .puddle {
+      position: absolute;
+      top: 30px;
+      right: 48px;
+      width: 90px;
+      height: 40px;
+      background: radial-gradient(ellipse at 40% 40%, rgba(160, 215, 240, 0.35), rgba(120, 190, 230, 0.15));
+      border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%;
+      box-shadow: inset 0 -2px 8px rgba(255, 255, 255, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1);
+      z-index: 13;
+    }
+
+    /* ─── TILE GRID ────────────────────────── */
+    .tile-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 3px;
+      background: transparent;
+      z-index: 3;
+      transform-style: preserve-3d;
+    }
+
+    .tile {
+      position: relative;
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.12) 0%, transparent 40%),
+        linear-gradient(340deg, rgba(0, 0, 0, 0.08) 0%, transparent 30%),
+        linear-gradient(135deg, #D8DDE2 0%, #C4CAD0 35%, #BCC2C8 65%, #B4BAC0 100%);
+      overflow: visible;
+      box-shadow:
+        0 0 0 1.5px #5A5D63,
+        inset 0 1px 0 rgba(255, 255, 255, 0.55), inset 1px 0 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.12), inset -1px 0 0 rgba(0, 0, 0, 0.08);
+      transform-style: preserve-3d;
+      /* Will be moved by GSAP — need relative z for stacking */
+      will-change: transform;
+    }
+
+    .tile::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(0, 0, 0, 0.04) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .tile.opens {
+      z-index: 6;
+    }
+
+    /* Cavity depth */
+    .cavity-shadow {
+      position: absolute;
+      z-index: 4;
+      pointer-events: none;
+      left: calc(25% + 1.5px);
+      top: calc(25% + 1.5px);
+      width: calc(50% - 3px);
+      height: calc(50% - 3px);
+      border-radius: 4px;
+      background: radial-gradient(ellipse 120% 80% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.35) 100%);
+      box-shadow: inset 0 6px 16px rgba(0, 0, 0, 0.5), inset 0 -5px 12px rgba(0, 0, 0, 0.35),
+        inset 4px 0 10px rgba(0, 0, 0, 0.25), inset -4px 0 10px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+    }
+
+    @media (max-width: 980px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        padding: 60px 24px;
+        gap: 40px;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 440px;
+      }
+
+      .visual {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .actions {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .stats {
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section class="hero">
+    <div class="hero-content">
+      <div>
+        <div class="badge"><span class="bdot"></span>Lokal hjelp — raskt</div>
+        <h1>Kaldt gulv?<br>Vi fikser <em>varme&shy;kabelen</em>.</h1>
+        <p class="desc">Ødelagte varmekabler er frustrerende. M-tek finner feilen nøyaktig og reparerer den — uten
+          unødig riving og uten lang ventetid.</p>
+        <div class="actions">
+          <a href="#kontakt" class="btn-main">Ring oss i dag
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </a>
+          <a href="#tjenester" class="btn-ghost">Hva gjør vi?</a>
+        </div>
+        <div class="stats">
+          <div>
+            <div class="sv">500+</div>
+            <div class="sl">Reparasjoner</div>
+          </div>
+          <div>
+            <div class="sv">98%</div>
+            <div class="sl">Fornøyde kunder</div>
+          </div>
+          <div>
+            <div class="sv">&lt;24t</div>
+            <div class="sl">Responstid</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="card">
+          <div class="floor-scene" id="floorScene">
+
+            <svg class="cable-svg" viewBox="0 0 460 440" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <pattern id="noise" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+                  <rect width="6" height="6" fill="none" />
+                  <circle cx="1" cy="1" r=".7" fill="rgba(255,255,255,.02)" />
+                  <circle cx="4" cy="4" r=".5" fill="rgba(255,255,255,.015)" />
+                  <circle cx="2" cy="5" r=".3" fill="rgba(255,255,255,.01)" />
+                </pattern>
+                <filter id="cglow" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b1" />
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b2" />
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="b3" />
+                  <feMerge>
+                    <feMergeNode in="b3" />
+                    <feMergeNode in="b2" />
+                    <feMergeNode in="b1" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <filter id="heatglow" x="-100%" y="-100%" width="300%" height="300%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="22" />
+                </filter>
+                <filter id="fglow" x="-100%" y="-100%" width="300%" height="300%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b1" />
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="b2" />
+                  <feMerge>
+                    <feMergeNode in="b2" />
+                    <feMergeNode in="b1" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <filter id="weldglow" x="-200%" y="-200%" width="500%" height="500%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b1" />
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b2" />
+                  <feMerge>
+                    <feMergeNode in="b2" />
+                    <feMergeNode in="b1" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <linearGradient id="cavTop" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#000" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#000" stop-opacity="0" />
+                </linearGradient>
+                <linearGradient id="cavBot" x1="0" y1="1" x2="0" y2="0">
+                  <stop offset="0%" stop-color="#000" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="#000" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+
+              <!-- Concrete -->
+              <rect width="460" height="440" fill="#1a1a24" />
+              <rect width="460" height="440" fill="url(#noise)" />
+              <rect x="115" y="110" width="230" height="220" fill="#0f0f16" rx="3" />
+              <rect x="115" y="110" width="230" height="30" fill="url(#cavTop)" />
+              <rect x="115" y="300" width="230" height="30" fill="url(#cavBot)" />
+              <line x1="0" y1="110" x2="460" y2="110" stroke="rgba(255,255,255,.025)" stroke-width="1" />
+              <line x1="0" y1="220" x2="460" y2="220" stroke="rgba(255,255,255,.025)" stroke-width="1" />
+              <line x1="0" y1="330" x2="460" y2="330" stroke="rgba(255,255,255,.025)" stroke-width="1" />
+
+              <!-- Heat glow -->
+              <g id="heatGlow" opacity="0">
+                <g filter="url(#heatglow)">
+                  <line x1="32" y1="165" x2="428" y2="165" stroke="#FF6030" stroke-width="6" opacity="0.4" />
+                  <line x1="428" y1="220" x2="32" y2="220" stroke="#FF6030" stroke-width="6" opacity="0.4" />
+                  <line x1="32" y1="275" x2="428" y2="275" stroke="#FF6030" stroke-width="6" opacity="0.4" />
+                </g>
+              </g>
+
+              <!-- Diagnostics: thermography + point measurement -->
+              <g id="scanGroup" opacity="0">
+                <rect id="thermoBand" x="115" y="128" width="230" height="26" fill="#7DE8FF" opacity="0.28"
+                  filter="url(#cglow)" />
+                <line id="testerLead" x1="165" y1="120" x2="230" y2="220" stroke="#9BEFFF" stroke-width="2.2"
+                  stroke-linecap="round" opacity="0" />
+                <circle id="scanHotspot" cx="230" cy="220" r="8" fill="#8CEBFF" opacity="0" />
+              </g>
+              <g id="testerPulses" opacity="0">
+                <circle id="pulseLeft" cx="32" cy="220" r="4" fill="#9BEFFF" filter="url(#cglow)" />
+                <circle id="pulseRight" cx="428" cy="220" r="4" fill="#9BEFFF" filter="url(#cglow)" />
+              </g>
+              <g id="pointProbe" opacity="0">
+                <circle id="probeOuter" cx="230" cy="220" r="28" fill="none" stroke="#8CEBFF" stroke-width="2"
+                  opacity="0.75" />
+                <circle id="probeInner" cx="230" cy="220" r="5" fill="#D8F8FF" />
+              </g>
+
+
+              <!-- Cable shadow -->
+              <g stroke="rgba(0,0,0,0.4)" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                transform="translate(2,3)">
+                <line x1="32" y1="165" x2="428" y2="165" />
+                <line x1="428" y1="220" x2="32" y2="220" />
+                <line x1="32" y1="275" x2="428" y2="275" />
+              </g>
+
+              <!-- Cables -->
+              <g id="cablePaths" stroke="#00B4F0" stroke-width="4.5" fill="none" stroke-linecap="round"
+                stroke-linejoin="round" filter="url(#cglow)">
+                <line x1="32" y1="55" x2="428" y2="55" />
+                <path d="M428,55 Q448,55 448,82 Q448,110 428,110" />
+                <line x1="428" y1="110" x2="32" y2="110" />
+                <path d="M32,110 Q12,110 12,137 Q12,165 32,165" />
+                <line x1="32" y1="165" x2="428" y2="165" />
+                <path d="M428,165 Q448,165 448,192 Q448,220 428,220" />
+                <line x1="428" y1="220" x2="32" y2="220" />
+                <path d="M32,220 Q12,220 12,247 Q12,275 32,275" />
+                <line x1="32" y1="275" x2="428" y2="275" />
+                <path d="M428,275 Q448,275 448,302 Q448,330 428,330" />
+                <line x1="428" y1="330" x2="32" y2="330" />
+                <path d="M32,330 Q12,330 12,357 Q12,385 32,385" />
+                <line x1="32" y1="385" x2="428" y2="385" />
+              </g>
+
+              <!-- Fault -->
+              <g id="faultGroup" opacity="0">
+                <rect id="faultGap" x="210" y="214" width="40" height="12" fill="#0f0f16" rx="2" />
+                <g filter="url(#fglow)">
+                  <circle cx="212" cy="220" r="5" fill="#fff" />
+                  <circle cx="212" cy="220" r="9" fill="#00B4F0" opacity="0.7" />
+                  <circle cx="248" cy="220" r="5" fill="#fff" />
+                  <circle cx="248" cy="220" r="9" fill="#00B4F0" opacity="0.7" />
+                </g>
+                <circle cx="230" cy="220" r="10" fill="none" stroke="#fff" stroke-width="2.5">
+                  <animate attributeName="r" values="8;40;8" dur="0.8s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.9;0;0" dur="0.8s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="230" cy="220" r="15" fill="none" stroke="#00B4F0" stroke-width="4">
+                  <animate attributeName="r" values="15;65;15" dur="1.2s" begin="0.1s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.6;0;0" dur="1.2s" begin="0.1s" repeatCount="indefinite" />
+                </circle>
+                <path d="M 214 220 L 222 210 L 238 228 L 246 220" fill="none" stroke="#fff" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round" filter="url(#fglow)">
+                  <animate attributeName="opacity" values="1;0;0.8;0.2;1" dur="0.15s" repeatCount="indefinite" />
+                </path>
+                <circle cx="230" cy="220" r="60" fill="#00B4F0" opacity="0.1" filter="url(#heatglow)" />
+              </g>
+
+              <!-- Weld point (repair tool) -->
+              <g id="weldPoint" opacity="0">
+                <circle id="weldDot" cx="210" cy="220" r="4" fill="#fff" filter="url(#weldglow)" />
+                <circle cx="210" cy="220" r="7" fill="#FFB040" opacity="0.6" filter="url(#weldglow)" id="weldOuter" />
+                <!-- Repaired cable segment grows behind weld point -->
+                <line id="weldTrail" x1="210" y1="220" x2="210" y2="220" stroke="#00B4F0" stroke-width="4.5"
+                  stroke-linecap="round" filter="url(#cglow)" />
+              </g>
+
+              <!-- Clear success cue after repair -->
+              <g id="repairBadge" opacity="0">
+                <circle id="repairRing" cx="230" cy="220" r="10" fill="none" stroke="#6CF38A" stroke-width="3"
+                  filter="url(#weldglow)" />
+                <path id="repairCheck" d="M223 220 L228 225 L238 214" fill="none" stroke="#C7FFD4" stroke-width="3"
+                  stroke-linecap="round" stroke-linejoin="round" />
+              </g>
+              <g id="continuityPass" opacity="0">
+                <circle id="continuityDot" cx="210" cy="220" r="3.5" fill="#9DFFB2" filter="url(#cglow)" />
+              </g>
+            </svg>
+
+            <div class="cavity-shadow" id="cavityShadow"></div>
+            <div class="thermostat">
+              <div class="therm-icon" id="thermIcon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
+                </svg>
+              </div>
+              <div class="therm-display">
+                <div class="temp-slider" id="tempSlider">
+                  <div>14°</div>
+                  <div>15°</div>
+                  <div>16°</div>
+                  <div>17°</div>
+                  <div>18°</div>
+                  <div>19°</div>
+                  <div>20°</div>
+                  <div>21°</div>
+                  <div>22°</div>
+                  <div>23°</div>
+                  <div>24°</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="puddle" id="puddle"></div>
+            <div class="shower-drain">
+              <div class="drain-slot"></div>
+              <div class="drain-slot"></div>
+              <div class="drain-slot"></div>
+            </div>
+
+            <div class="tile-grid" id="tileGrid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ══════════════════════════════════════════
+    // 1. TILE GRID
+    // ══════════════════════════════════════════
+    const grid = document.getElementById('tileGrid');
+    const scene = document.getElementById('floorScene');
+    const COLS = 4, ROWS = 4;
+    const openCoords = [[1, 1], [1, 2], [2, 1], [2, 2]];
+    const movableTiles = []; // ordered: top-left, top-right, bottom-left, bottom-right
+
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const tile = document.createElement('div');
+        const isOpen = openCoords.some(([or, oc]) => or === r && oc === c);
+        if (isOpen) {
+          tile.className = 'tile opens';
+          tile.dataset.row = r;
+          tile.dataset.col = c;
+          movableTiles.push(tile);
+        } else {
+          tile.className = 'tile';
+          const h = Math.random() * 4 - 2, l = Math.random() * 3 - 1.5;
+          tile.style.filter = `hue-rotate(${h}deg) brightness(${1 + l / 100})`;
+        }
+        grid.appendChild(tile);
+      }
+    }
+
+    // ══════════════════════════════════════════
+    // 2. COMPUTE TILE STACK POSITIONS
+    // ══════════════════════════════════════════
+    // Tiles slide to the left side, stacked to make the local repair clearer
+    function getStackPositions() {
+      const sceneW = scene.offsetWidth;
+      const sceneH = scene.offsetHeight;
+      const tileW = (sceneW - 3 * 3) / 4; // ~112px
+      const tileH = (sceneH - 3 * 3) / 4;  // ~107px
+
+      // Stack destination: left side, near opened area
+      const stackBaseX = -tileW * 0.72;
+      const stackBaseY = sceneH * 0.28;
+
+      return movableTiles.map((tile, i) => {
+        const r = parseInt(tile.dataset.row);
+        const c = parseInt(tile.dataset.col);
+        // Current grid position (top-left of tile)
+        const curX = c * (tileW + 3);
+        const curY = r * (tileH + 3);
+        // Offset in stack: tidy single pile with light fan
+        const stackX = stackBaseX + (i % 2) * 4;
+        const stackY = stackBaseY + i * 11;
+        return {
+          tile,
+          dx: stackX - curX,
+          dy: stackY - curY,
+          rotation: -2 + i * 1.3,
+        };
+      });
+    }
+
+    // ══════════════════════════════════════════
+    // 4. GSAP MASTER TIMELINE
+    // ══════════════════════════════════════════
+    const cablePaths = document.getElementById('cablePaths');
+    const scanGroup = document.getElementById('scanGroup');
+    const thermoBand = document.getElementById('thermoBand');
+    const testerLead = document.getElementById('testerLead');
+    const scanHotspot = document.getElementById('scanHotspot');
+    const testerPulses = document.getElementById('testerPulses');
+    const pulseLeft = document.getElementById('pulseLeft');
+    const pulseRight = document.getElementById('pulseRight');
+    const pointProbe = document.getElementById('pointProbe');
+    const probeOuter = document.getElementById('probeOuter');
+
+    const faultGroup = document.getElementById('faultGroup');
+    const faultGap = document.getElementById('faultGap');
+    const heatGlow = document.getElementById('heatGlow');
+    const cavityShadow = document.getElementById('cavityShadow');
+    const thermIcon = document.getElementById('thermIcon');
+    const tempSlider = document.getElementById('tempSlider');
+    const weldPoint = document.getElementById('weldPoint');
+    const weldDot = document.getElementById('weldDot');
+    const weldOuter = document.getElementById('weldOuter');
+    const weldTrail = document.getElementById('weldTrail');
+    const repairBadge = document.getElementById('repairBadge');
+    const repairRing = document.getElementById('repairRing');
+    const repairCheck = document.getElementById('repairCheck');
+    const continuityPass = document.getElementById('continuityPass');
+    const continuityDot = document.getElementById('continuityDot');
+
+    function buildMainTimeline() {
+      const tl = gsap.timeline({ repeat: -1, delay: 1.5 });
+      const stackPos = getStackPositions();
+      const tileStart = 2.9;
+
+      // ─── PHASE 1: Calm floor (0–0.8s) ───
+
+      // ─── PHASE 2: Diagnostics (thermography + cable tester + point measurement) ───
+      tl.set(scanGroup, { opacity: 1 }, 0.8);
+      tl.set(testerPulses, { opacity: 1 }, 0.8);
+      tl.set(thermoBand, { attr: { y: 128 } }, 0.8);
+      tl.set(testerLead, { opacity: 0 }, 0.8);
+      tl.set(pulseLeft, { attr: { cx: 32 } }, 0.8);
+      tl.set(pulseRight, { attr: { cx: 428 } }, 0.8);
+      tl.to(thermoBand, { attr: { y: 286 }, duration: 1.6, ease: "none" }, 0.9);
+      tl.to(pulseLeft, { attr: { cx: 212 }, duration: 1.2, ease: "power1.inOut" }, 1.0);
+      tl.to(pulseRight, { attr: { cx: 248 }, duration: 1.2, ease: "power1.inOut" }, 1.0);
+      tl.to(testerLead, { opacity: 0.9, duration: 0.25, ease: "power2.out" }, 1.45);
+      tl.fromTo(scanHotspot, { opacity: 0, attr: { r: 7 } }, { opacity: 0.85, attr: { r: 16 }, duration: 0.3, yoyo: true, repeat: 1, ease: "power2.out" }, 1.55);
+      tl.set(pointProbe, { opacity: 1 }, 1.75);
+      tl.fromTo(probeOuter, { attr: { r: 30 }, opacity: 0.75 }, { attr: { r: 10 }, opacity: 0.35, duration: 0.5, ease: "power2.out" }, 1.78);
+      tl.to(testerLead, { opacity: 0, duration: 0.2 }, 2.3);
+      tl.to(testerPulses, { opacity: 0, duration: 0.2 }, 2.3);
+      tl.to(pointProbe, { opacity: 0, duration: 0.2 }, 2.35);
+      tl.to(scanGroup, { opacity: 0, duration: 0.25, ease: "power2.in" }, 2.45);
+
+      // ─── PHASE 3: Minimal intervention (only local area opened) ───
+      // Display the fault instead of the locator marks
+      tl.set(faultGroup, { opacity: 1 }, 2.6);
+      tl.fromTo(faultGroup, { scale: 0.98, transformOrigin: "230px 220px" }, { scale: 1, duration: 0.45, ease: "power2.out" }, 2.6);
+
+      stackPos.forEach((sp, i) => {
+        const delay = tileStart + i * 0.25;
+
+        tl.to(sp.tile, {
+          y: -8, scale: 1.04,
+          duration: 0.3, ease: "power2.out"
+        }, delay);
+
+        tl.to(sp.tile, {
+          x: sp.dx, y: sp.dy,
+          rotation: sp.rotation,
+          scale: 0.92,
+          duration: 0.8,
+          ease: "power2.inOut",
+          boxShadow: "0 6px 20px rgba(0,0,0,0.3), 0 0 0 1.5px #5A5D63"
+        }, delay + 0.3);
+      });
+
+      // Cavity shadow
+      tl.to(cavityShadow, { opacity: 1, duration: 1, ease: "power2.out" }, tileStart + 1);
+
+      // ─── PHASE 4: Fault visible and waiting for repair (til 7.9s) ───
+
+      // ─── PHASE 5: Welding repair (7.9–10.5s) ───
+      // Fade out fault sparks/shockwaves
+      tl.to(faultGroup, { opacity: 0, duration: 0.6, ease: "power2.in" }, 7.9);
+
+      // Show weld point at left end of break
+      tl.set(weldPoint, { opacity: 1 }, 8.4);
+      tl.set(weldDot, { attr: { cx: 210 } }, 8.4);
+      tl.set(weldOuter, { attr: { cx: 210 } }, 8.4);
+      tl.set(weldTrail, { attr: { x1: 210, x2: 210 } }, 8.4);
+
+      // Weld point travels across the break (210 → 250)
+      const weldDur = 1.8;
+      tl.to(weldDot, { attr: { cx: 250 }, duration: weldDur, ease: "power1.inOut" }, 8.7);
+      tl.to(weldOuter, { attr: { cx: 250 }, duration: weldDur, ease: "power1.inOut" }, 8.7);
+      // Trail grows behind the weld point (repaired cable)
+      tl.to(weldTrail, { attr: { x2: 250 }, duration: weldDur, ease: "power1.inOut" }, 8.7);
+      // Fault gap shrinks as weld progresses
+      tl.to(faultGap, { attr: { width: 0, x: 250 }, duration: weldDur, ease: "power1.inOut" }, 8.7);
+
+      // Fade out weld point with a satisfying "ping"
+      // Completion flash at weld end
+      tl.to(weldOuter, { attr: { r: 20 }, opacity: 0.9, duration: 0.15, ease: "power4.out" }, 10.5);
+      tl.to(weldOuter, { attr: { r: 7 }, opacity: 0, duration: 0.4, ease: "power2.in" }, 10.65);
+      tl.to(weldDot, { opacity: 0, duration: 0.3 }, 10.7);
+      tl.set(weldPoint, { opacity: 0 }, 11.1);
+
+      // Explicit "fixed" signal so the repair reads clearly
+      tl.set(repairBadge, { opacity: 1 }, 10.58);
+      tl.fromTo(repairRing, { attr: { r: 8 }, opacity: 0.95 }, { attr: { r: 26 }, opacity: 0, duration: 0.6, ease: "power2.out" }, 10.58);
+      tl.fromTo(repairCheck, { opacity: 0, scale: 0.7, transformOrigin: "230px 220px" }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, 10.62);
+      tl.to(repairBadge, { opacity: 0, duration: 0.35, ease: "power2.in" }, 11.25);
+
+      // ─── PHASE 6: Connection verification, then warm-up ───
+      tl.set(continuityPass, { opacity: 1 }, 11.05);
+      tl.set(continuityDot, { attr: { cx: 210 } }, 11.05);
+      tl.to(continuityDot, { attr: { cx: 250 }, duration: 0.55, ease: "power1.inOut" }, 11.1);
+      tl.to(continuityPass, { opacity: 0, duration: 0.2 }, 11.72);
+      tl.to(cablePaths, { attr: { stroke: '#6CF38A' }, duration: 0.35, ease: "power1.out" }, 10.65);
+      tl.to(cablePaths, { attr: { stroke: '#FF7340' }, duration: 1.7, ease: "power1.inOut" }, 11.0);
+      tl.to(heatGlow, { opacity: 1, duration: 1.5, ease: "power2.out" }, 11.2);
+      tl.to(thermIcon, { color: '#FF7340', duration: 0.9, ease: "power1.inOut" }, 10.9);
+      tl.to(tempSlider, { y: -240, duration: 2.4, ease: "power2.out" }, 10.9);
+
+
+      // ─── PHASE 7: Tiles placed back neatly (13.7–15.9s) ───
+      // Return from stack in clean order for a tidy re-lay
+      const returnOrder = [...stackPos];
+      returnOrder.forEach((sp, i) => {
+        const delay = 13.7 + i * 0.35;
+
+        // Lift from stack
+        tl.to(sp.tile, {
+          y: sp.dy - 10, scale: 1.02, rotation: sp.rotation * 0.25,
+          duration: 0.3, ease: "power2.out"
+        }, delay);
+
+        // Glide back to grid position
+        tl.to(sp.tile, {
+          x: 0, y: 0, scale: 1, rotation: 0,
+          duration: 0.72, ease: "power3.out",
+          boxShadow: "0 0 0 1.5px #5A5D63, inset 0 1px 0 rgba(255,255,255,0.55), inset 1px 0 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.12), inset -1px 0 0 rgba(0,0,0,0.08)"
+        }, delay + 0.3);
+      });
+
+      tl.to(cavityShadow, { opacity: 0, duration: 0.8, ease: "power2.in" }, 14.9);
+
+      // ─── PHASE 8: Reset for loop (16.4–18.3s) ───
+      tl.to(cablePaths, { attr: { stroke: '#00B4F0' }, duration: 1.2, ease: "power1.inOut" }, 16.4);
+      tl.to(heatGlow, { opacity: 0, duration: 1, ease: "power2.in" }, 16.4);
+      tl.to(thermIcon, { color: '#00B4F0', duration: 1 }, 16.4);
+      tl.to(tempSlider, { y: 0, duration: 1, ease: "power2.inOut" }, 16.6);
+
+      // Reset fault (hidden until tiles open again)
+      tl.set(scanGroup, { opacity: 0 }, 18.3);
+      tl.set(scanHotspot, { opacity: 0, attr: { r: 8 } }, 18.3);
+      tl.set(testerPulses, { opacity: 0 }, 18.3);
+      tl.set(pulseLeft, { attr: { cx: 32 } }, 18.3);
+      tl.set(pulseRight, { attr: { cx: 428 } }, 18.3);
+      tl.set(pointProbe, { opacity: 0 }, 18.3);
+      tl.set(probeOuter, { attr: { r: 28 }, opacity: 0.75 }, 18.3);
+      tl.set(thermoBand, { attr: { y: 128 } }, 18.3);
+      tl.set(testerLead, { opacity: 0 }, 18.3);
+      tl.set(faultGroup, { opacity: 0 }, 18.3);
+      tl.set(faultGap, { attr: { width: 40, x: 210 } }, 18.3);
+      tl.set(repairBadge, { opacity: 0 }, 18.3);
+      tl.set(continuityPass, { opacity: 0 }, 18.3);
+      tl.set(continuityDot, { attr: { cx: 210 } }, 18.3);
+      // Reset weld trail
+      tl.set(weldTrail, { attr: { x1: 210, x2: 210 } }, 18.3);
+      tl.set(weldDot, { opacity: 1, attr: { cx: 210 } }, 18.3);
+      tl.set(weldOuter, { opacity: 0.6, attr: { cx: 210, r: 7 } }, 18.3);
+
+      return tl;
+    }
+
+    // ══════════════════════════════════════════
+    // 5. INTRO
+    // ══════════════════════════════════════════
+    function buildIntro() {
+      const intro = gsap.timeline();
+      intro.to('.badge', { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.2);
+      intro.to('h1', { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.35);
+      intro.to('.desc', { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.5);
+      intro.to('.actions', { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.65);
+      intro.to('.stats', { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.8);
+      intro.to('.visual', { opacity: 1, duration: 0.8, ease: "power2.out" }, 0.4);
+      return intro;
+    }
+
+    // ══════════════════════════════════════════
+    // 6. LAUNCH
+    // ══════════════════════════════════════════
+    buildIntro();
+    buildMainTimeline();
+
+  </script>
+</body>
+
+</html>

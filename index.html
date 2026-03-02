@@ -4,122 +4,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Header Forhåndsvisning - Bevar & M-TEK</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Header Portefølje | Oversikt</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            --primary: #56c8bd;
+            --primary-dark: #315D6D;
+            --navy: #142A56;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Outfit', sans-serif;
-            background: #0f172a;
-            color: white;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1100px;
+            animation: fadeInUp 0.8s ease-out both;
+            animation-delay: 0.2s;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(86, 200, 189, 0.1);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--primary);
+            margin-bottom: 10px;
+            transition: transform 0.4s ease;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .card:hover .card-icon {
+            transform: rotate(-10deg) scale(1.1);
+            background: var(--primary);
+            color: var(--navy);
         }
 
-        .glass-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        .card-content h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .card-content p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
         }
 
-        .preview-btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
-            transition: all 0.3s ease;
+        .card-arrow {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary);
+            transition: gap 0.3s ease;
         }
 
-        .preview-btn:hover {
-            transform: scale(1.05);
-            filter: brightness(1.1);
+        .card:hover .card-arrow {
+            gap: 15px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Ambient Orbs */
+        .orb {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .orb-1 {
+            background: var(--primary);
+            top: -100px;
+            left: -100px;
+            animation: float 20s infinite alternate;
+        }
+
+        .orb-2 {
+            background: #3b82f6;
+            bottom: -100px;
+            right: -100px;
+            animation: float 25s infinite alternate-reverse;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
-<body class="p-6">
-    <div class="max-w-6xl w-full">
-        <header class="text-center mb-16">
-            <h1 class="text-5xl font-extrabold mb-4">Prosjekt <span class="gradient-text">Header-design</span></h1>
-            <p class="text-slate-400 text-xl">Velg en av løsningene nedenfor for å se forhåndsvisningen.</p>
-        </header>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- M-tek Header A -->
-            <div class="glass-card p-8 flex flex-col h-full">
-                <div class="mb-6 h-12 flex items-center">
-                    <h2 class="text-2xl font-bold">M-TEK Header A</h2>
-                </div>
-                <p class="text-slate-400 mb-8 flex-grow">
-                    Kommunikasjonsmosaikk med interaktiv zoom-effekt (Bilde) og rullende tekst-animasjoner.
-                </p>
-                <a href="M-tek header/module.html"
-                    class="preview-btn text-white font-bold py-4 px-6 rounded-xl text-center">
-                    Åpne Versjon A
-                </a>
+    <header>
+        <h1>Header Galleri</h1>
+        <p>Utforsk de individuelle header-modulene designet for M-tek, Bevar og M-tett.</p>
+    </header>
+
+    <div class="container">
+        <!-- M-tek Card -->
+        <a href="M-tek header B/m-tek-header.html" class="card">
+            <div class="card-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20" />
+                    <path d="m5 9 7-7 7 7" />
+                    <path d="m19 15-7 7-7-7" />
+                </svg>
             </div>
-
-            <!-- M-tek Header B -->
-            <div class="glass-card p-8 flex flex-col h-full border-blue-400/30 bg-blue-500/5">
-                <div class="mb-6 h-12 flex items-center justify-between">
-                    <h2 class="text-2xl font-bold">M-TEK Header B</h2>
-                    <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">NY</span>
-                </div>
-                <p class="text-slate-400 mb-8 flex-grow">
-                    Alternativ versjon med illustrativ "varmekabel-scanner" animasjon i stedet for bilde.
-                </p>
-                <a href="M-tek header B/module.html"
-                    class="preview-btn text-white font-bold py-4 px-6 rounded-xl text-center">
-                    Åpne Versjon B
-                </a>
+            <div class="card-content">
+                <h2>M-tek Header B</h2>
+                <p>Interaktiv 3D-animasjon av varmekabel-reparasjon på et baderomsgulv. Bruker Three.js og GSAP.</p>
             </div>
-
-            <!-- M-tett Header -->
-            <div class="glass-card p-8 flex flex-col h-full">
-                <div class="mb-6 h-12 flex items-center">
-                    <h2 class="text-2xl font-bold">M-TETT Header</h2>
-                </div>
-                <p class="text-slate-400 mb-8 flex-grow">
-                    Fokusert på baderomstjenester med før/etter visuelle effekter og hotspots.
-                </p>
-                <a href="M-tett header/module.html"
-                    class="preview-btn text-white font-bold py-4 px-6 rounded-xl text-center">
-                    Åpne forhåndsvisning
-                </a>
+            <div class="card-arrow">
+                Vis header
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                </svg>
             </div>
+        </a>
 
-            <!-- Bevar Header -->
-            <div class="glass-card p-8 flex flex-col h-full">
-                <div class="mb-6 h-12 flex items-center">
-                    <h2 class="text-2xl font-bold">Bevar Header</h2>
-                </div>
-                <p class="text-slate-400 mb-8 flex-grow">
-                    Ren og profesjonell header skreddersydd for Bevar Våtrom-profilen.
-                </p>
-                <a href="Bevar header/module.html"
-                    class="preview-btn text-white font-bold py-4 px-6 rounded-xl text-center">
-                    Åpne forhåndsvisning
-                </a>
+        <!-- Bevar Card -->
+        <a href="Bevar header/module.html" class="card">
+            <div class="card-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
+                    <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4" />
+                    <path d="M13 13h4" />
+                    <path d="M13 17h4" />
+                    <path d="M7 13h2v4H7z" />
+                </svg>
             </div>
-        </div>
+            <div class="card-content">
+                <h2>Bevar Header</h2>
+                <p>Clean design med fokus på punktreparasjon av våtrom. Dynamisk zoom-effekt ved hover på skadepunkter.
+                </p>
+            </div>
+            <div class="card-arrow">
+                Vis header
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                </svg>
+            </div>
+        </a>
 
-        <footer class="mt-20 text-center text-slate-500 text-sm">
-            &copy; 2026 Header_bevar Prosjekt. Klar til presentasjon.
-        </footer>
+        <!-- M-tett Card -->
+        <a href="M-tett header/module.html" class="card">
+            <div class="card-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+            </div>
+            <div class="card-content">
+                <h2>M-tett Header</h2>
+                <p>Profesjonell oversikt over spesialtjenester for våtrom med optimaliserte WebP-bilder og rask respons.
+                </p>
+            </div>
+            <div class="card-arrow" style="color: #3b82f6;">
+                Vis header
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                </svg>
+            </div>
+        </a>
     </div>
 </body>
 

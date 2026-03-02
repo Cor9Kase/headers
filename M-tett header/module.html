@@ -4,12 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-TETT - Spesialister på våtrom</title>
-    <script src="https://cdn.tailwindcss.com" defer></script>
-    <link rel="stylesheet" href="module.css">
-    <link rel="preload" as="image" href="assets/Nye bilder/optimized/friskt-bad-1600.webp" type="image/webp"
-        fetchpriority="high">
+    <title>M-TETT Modul</title>
 
+    <!-- Tailwind & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -23,200 +21,431 @@
             }
         }
     </script>
+
+    <style id="mtett-front-module-css">
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+
+        .mtett-front-module {
+            --mtett-navy: #142A56;
+            --mtett-blue: #2563eb;
+            --mtett-cyan: #06b6d4;
+            --accent-glow: rgba(37, 99, 235, 0.4);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8fafc;
+            color: var(--mtett-navy);
+        }
+
+        .mtett-front-module .banner-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 2.5rem;
+            overflow: hidden;
+            box-shadow: 0 40px 100px -20px rgba(20, 42, 86, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mtett-front-module .main-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 1024px) {
+            .mtett-front-module .main-content {
+                flex-direction: row;
+                min-height: 700px;
+            }
+        }
+
+        .mtett-front-module .text-column {
+            flex: 1;
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .mtett-front-module .canvas-column {
+            flex: 1.3;
+            position: relative;
+            background: #f1f5f9;
+            overflow: hidden;
+            min-height: 500px;
+        }
+
+        .mtett-front-module #default-bg,
+        .mtett-front-module #zoom-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease;
+            will-change: transform, opacity;
+        }
+
+        .mtett-front-module #zoom-overlay {
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .mtett-front-module .hotspot {
+            position: absolute;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .mtett-front-module .hotspot-inner {
+            display: block;
+        }
+
+        .mtett-front-module .hotspot-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.75);
+            color: #315D6D;
+            padding: .75rem 1.2rem;
+            border-radius: .95rem;
+            font-size: 1rem;
+            font-weight: 700;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 24px rgba(20, 42, 86, 0.16);
+            transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .mtett-front-module .hotspot:hover {
+            transform: translate(-50%, -50%) scale(1.02);
+        }
+
+        .mtett-front-module .hotspot:hover .hotspot-label {
+            background: rgba(255, 255, 255, 0.93);
+            color: #1F3B4D;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(20, 42, 86, 0.22);
+        }
+
+        .mtett-front-module .main-button {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .mtett-front-module .main-button:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(20, 42, 86, 0.2);
+        }
+
+        @media (max-width: 1024px) {
+            .mtett-front-module {
+                padding: 10px;
+            }
+
+            .mtett-front-module .text-column {
+                padding: 1.5rem;
+            }
+
+            .mtett-front-module .canvas-column {
+                min-height: 360px;
+            }
+
+            .mtett-front-module .hotspot-label {
+                font-size: .9rem;
+                padding: .6rem .9rem;
+            }
+        }
+    </style>
+
+    <style id="mtett-front-module-overrides">
+        .mtett-front-module {
+            --mtett-navy: #12233f;
+            --mtett-blue: #4e93d4;
+            --mtett-bg: #dce5ed;
+            --mtett-bg-soft: #e7edf3;
+            --mtett-border: #b7c6d4;
+            --mtett-text-muted: rgba(18, 35, 63, .78);
+            padding: 12px;
+            background: var(--mtett-bg);
+            color: var(--mtett-navy);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Root scope protection */
+        #mtett-front-module-root .banner-container {
+            border-radius: 1.75rem;
+            background: var(--mtett-bg-soft);
+            border: 1px solid var(--mtett-border);
+            box-shadow: 0 18px 40px -28px rgba(18, 35, 63, .35);
+        }
+
+        #mtett-front-module-root .canvas-column {
+            min-height: 420px;
+            background: var(--mtett-border);
+        }
+
+        #mtett-front-module-root .text-column {
+            padding: 2.75rem;
+        }
+
+        #mtett-front-module-root #mainTitle {
+            color: var(--mtett-navy);
+        }
+
+        #mtett-front-module-root .text-blue-600 {
+            color: var(--mtett-blue) !important;
+        }
+
+        #mtett-front-module-root .text-gray-600 {
+            color: var(--mtett-text-muted) !important;
+        }
+
+        #mtett-front-module-root .text-mtett-blue {
+            color: var(--mtett-blue) !important;
+        }
+
+        #mtett-front-module-root .text-mtett-navy\/80 {
+            color: var(--mtett-text-muted) !important;
+        }
+
+        #mtett-front-module-root .bg-slate-50 {
+            background: rgba(255, 255, 255, .35) !important;
+        }
+
+        #mtett-front-module-root .border-slate-100 {
+            border-color: var(--mtett-border) !important;
+        }
+
+        .mtett-front-module .cta-primary {
+            background: var(--mtett-blue) !important;
+            color: #fff !important;
+            border: 2px solid var(--mtett-blue) !important;
+        }
+
+        .mtett-front-module .cta-secondary {
+            background: transparent !important;
+            color: var(--mtett-navy) !important;
+            border: 2px solid var(--mtett-navy) !important;
+        }
+
+        #mtett-front-module-root .hotspot-label {
+            font-size: .9rem;
+            background: rgba(18, 35, 63, .9);
+            color: #fff;
+            border: 1px solid rgba(78, 147, 212, .45);
+        }
+
+        #mtett-front-module-root .hotspot:hover .hotspot-label {
+            background: var(--mtett-blue);
+            color: #fff;
+        }
+
+        @media (min-width: 1024px) {
+            #mtett-front-module-root .main-content {
+                min-height: 560px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .mtett-front-module {
+                padding: 8px;
+            }
+
+            #mtett-front-module-root .text-column {
+                padding: 1.25rem;
+            }
+
+            #mtett-front-module-root .canvas-column {
+                min-height: 320px;
+            }
+
+            #mtett-front-module-root .hotspot-label {
+                font-size: .78rem;
+                padding: .6rem .85rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #mtett-front-module-root .canvas-column {
+                display: none;
+            }
+
+            #mtett-front-module-root .text-column {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
 
-<body>
+<body class="mtett-front-module">
 
-    <div class="banner-container">
-        <div class="main-content">
-            <div class="text-column">
-                <h1 id="mainTitle" class="text-3xl lg:text-5xl font-extrabold text-mtett-navy mb-4">
-                    M-TETT <span class="text-blue-600">redder badet</span>
-                </h1>
-                <p id="mainDescription" class="text-gray-600 mb-8 text-lg lg:text-xl leading-relaxed">
-                    Vi reparerer membran og fliser lokalt – raskere, billigere og mer bærekraftig enn full renovering.
-                    Med over 20 års erfaring finner vi løsningen som sparer både tid og penger.
-                </p>
+    <div id="mtett-front-module-root" class="w-full">
+        <div class="banner-container">
+            <div class="main-content">
+                <div class="text-column">
+                    <h1 id="mainTitle" class="text-3xl lg:text-5xl font-extrabold text-mtett-navy mb-4">
+                        M-TETT <span class="text-blue-600">redder badet</span>
+                    </h1>
+                    <p id="mainDescription" class="text-gray-600 mb-8 text-lg lg:text-xl leading-relaxed">
+                        Vi reparerer membran og fliser lokalt – raskere, billigere og mer bærekraftig enn full
+                        renovering.
+                        Med over 20 års erfaring finner vi løsningen som sparer både tid og penger.
+                    </p>
 
-                <div class="flex flex-row flex-wrap items-start gap-3 sm:gap-4">
-                    <a href="https://m-tett.no/kontakt/"
-                        class="main-button cta-primary bg-mtett-navy text-white font-bold py-3.5 px-8 rounded-xl shadow-xl text-lg">
-                        Kontakt oss
-                    </a>
-                    <a href="https://m-tett.no/bestill-oppdrag/"
-                        class="main-button cta-secondary bg-transparent border-2 border-mtett-navy text-mtett-navy font-bold py-3.5 px-8 rounded-xl text-lg">
-                        Få et prisestimat
-                    </a>
-                </div>
-
-                <div class="mt-8 grid grid-cols-2 gap-4">
-                    <div
-                        class="flex items-center gap-2 text-sm font-semibold text-mtett-navy/80 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                        <svg class="w-5 h-5 text-mtett-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.957 11.957 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                            </path>
-                        </svg>
-                        SINTEF testet
+                    <div class="flex flex-row flex-wrap items-start gap-3 sm:gap-4">
+                        <a href="https://m-tett.no/kontakt/"
+                            class="main-button cta-primary font-bold py-3.5 px-8 rounded-xl shadow-xl text-lg">
+                            Kontakt oss
+                        </a>
+                        <a href="https://m-tett.no/bestill-oppdrag/"
+                            class="main-button cta-secondary font-bold py-3.5 px-8 rounded-xl text-lg">
+                            Få et prisestimat
+                        </a>
                     </div>
-                    <div
-                        class="flex items-center gap-2 text-sm font-semibold text-mtett-navy/80 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                        <svg class="w-5 h-5 text-mtett-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                        20 års erfaring
-                    </div>
-                </div>
-            </div>
 
-            <div class="canvas-column" id="canvasColumn">
-                <div id="default-bg" style="background-image: url('assets/Nye bilder/optimized/friskt-bad-1600.webp');"></div>
-                <div id="zoom-overlay"></div>
-
-                <!-- Interaktive punkter -->
-                <div class="hotspot" data-key="sluk" data-pos-x="57" data-pos-y="73">
-                    <div class="hotspot-inner">
-                        <span class="hotspot-label">Lekkasje ved sluk</span>
+                    <div class="mt-8 grid grid-cols-2 gap-4">
+                        <div
+                            class="flex items-center gap-2 text-sm font-semibold text-mtett-navy/80 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <svg class="w-5 h-5 text-mtett-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.957 11.957 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                </path>
+                            </svg>
+                            SINTEF testet
+                        </div>
+                        <div
+                            class="flex items-center gap-2 text-sm font-semibold text-mtett-navy/80 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <svg class="w-5 h-5 text-mtett-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            20 års erfaring
+                        </div>
                     </div>
                 </div>
 
-                <div class="hotspot" data-key="flis" data-pos-x="50" data-pos-y="90" data-zoom-x="57" data-zoom-y="90">
-                    <div class="hotspot-inner">
-                        <span class="hotspot-label">Sprekk i flis</span>
-                    </div>
-                </div>
+                <div class="canvas-column" id="canvasColumn">
+                    <div id="default-bg"></div>
+                    <div id="zoom-overlay"></div>
 
-                <div class="hotspot" data-key="sisterne" data-pos-x="23" data-pos-y="54">
-                    <div class="hotspot-inner">
-                        <span class="hotspot-label">Innebygget sisterne</span>
+                    <!-- Interaktive punkter -->
+                    <div class="hotspot" data-key="sluk" data-pos-x="57" data-pos-y="73">
+                        <div class="hotspot-inner">
+                            <span class="hotspot-label">Lekkasje ved sluk</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="hotspot" data-key="armatur" data-pos-x="87" data-pos-y="60">
-                    <div class="hotspot-inner">
-                        <span class="hotspot-label">Armatur</span>
+                    <div class="hotspot" data-key="flis" data-pos-x="50" data-pos-y="90" data-zoom-x="57"
+                        data-zoom-y="90">
+                        <div class="hotspot-inner">
+                            <span class="hotspot-label">Sprekk i flis</span>
+                        </div>
+                    </div>
+
+                    <div class="hotspot" data-key="sisterne" data-pos-x="23" data-pos-y="54">
+                        <div class="hotspot-inner">
+                            <span class="hotspot-label">Innebygget sisterne</span>
+                        </div>
+                    </div>
+
+                    <div class="hotspot" data-key="armatur" data-pos-x="87" data-pos-y="60">
+                        <div class="hotspot-inner">
+                            <span class="hotspot-label">Armatur</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        const canvasColumn = document.getElementById('canvasColumn');
-        const defaultBg = document.getElementById('default-bg');
-        const zoomOverlay = document.getElementById('zoom-overlay');
-        const hotspots = document.querySelectorAll('.hotspot');
+    <script id="mtett-front-module-script">
+            (function () {
+                const root = document.getElementById('mtett-front-module-root');
+                if (!root) return;
+                const canvasColumn = root.querySelector('#canvasColumn');
+                const defaultBg = root.querySelector('#default-bg');
+                const zoomOverlay = root.querySelector('#zoom-overlay');
+                const hotspots = root.querySelectorAll('.hotspot');
+                if (!defaultBg || !zoomOverlay || !hotspots.length) return;
 
-        const baseImageMap = {
-            'default': {
-                webp: 'assets/Nye bilder/optimized/friskt-bad-1600.webp',
-                jpg: 'assets/Nye bilder/optimized/friskt-bad-1600.jpg'
-            },
-            'sluk': {
-                webp: 'assets/Nye bilder/optimized/sluk-1600.webp',
-                jpg: 'assets/Nye bilder/optimized/sluk-1600.jpg'
-            },
-            'flis': {
-                webp: 'assets/Nye bilder/optimized/sprekk-i-flis-1600.webp',
-                jpg: 'assets/Nye bilder/optimized/sprekk-i-flis-1600.jpg'
-            },
-            'sisterne': {
-                webp: 'assets/Nye bilder/optimized/innebygd-sisterne-1600.webp',
-                jpg: 'assets/Nye bilder/optimized/innebygd-sisterne-1600.jpg'
-            },
-            'armatur': {
-                webp: 'assets/Nye bilder/optimized/armatur-1600.webp',
-                jpg: 'assets/Nye bilder/optimized/armatur-1600.jpg'
-            }
-        };
+                const imageMap = {
+                    'default': 'assets/Nye bilder/optimized/friskt-bad-1600.webp',
+                    'sluk': 'assets/Nye bilder/optimized/sluk-1600.webp',
+                    'flis': 'assets/Nye bilder/optimized/sprekk-i-flis-1600.webp',
+                    'sisterne': 'assets/Nye bilder/optimized/innebygd-sisterne-1600.webp',
+                    'armatur': 'assets/Nye bilder/optimized/armatur-1600.webp'
+                };
 
-        const supportsWebP = (() => {
-            try {
-                const canvas = document.createElement('canvas');
-                return canvas.toDataURL('image/webp').startsWith('data:image/webp');
-            } catch (error) {
-                return false;
-            }
-        })();
+                function isCanvasVisible() {
+                    return canvasColumn && window.getComputedStyle(canvasColumn).display !== 'none';
+                }
 
-        const imageMap = Object.fromEntries(
-            Object.entries(baseImageMap).map(([key, formats]) => [key, supportsWebP ? formats.webp : formats.jpg])
-        );
+                function preloadImage(src, highPriority = false) {
+                    const img = new Image();
+                    img.decoding = 'async';
+                    if (highPriority) img.fetchPriority = 'high';
+                    img.src = src;
+                }
 
-        function isCanvasVisible() {
-            return canvasColumn && window.getComputedStyle(canvasColumn).display !== 'none';
-        }
+                function preloadRemainingImages(map) {
+                    Object.entries(map).forEach(([key, src]) => {
+                        if (key === 'default') return;
+                        preloadImage(src);
+                    });
+                }
 
-        function preloadImage(src, highPriority = false) {
-            const img = new Image();
-            img.decoding = 'async';
-            if (highPriority) img.fetchPriority = 'high';
-            img.src = src;
-        }
+                function handleHover(spot) {
+                    const key = spot.dataset.key;
+                    const imageUrl = imageMap[key];
+                    const x = spot.dataset.zoomX || spot.dataset.posX;
+                    const y = spot.dataset.zoomY || spot.dataset.posY;
+                    const transform = 'scale(1.8)';
+                    const origin = `${x}% ${y}%`;
+                    defaultBg.style.transformOrigin = origin;
+                    defaultBg.style.transform = transform;
+                    zoomOverlay.style.backgroundImage = `url('${imageUrl}')`;
+                    zoomOverlay.style.transformOrigin = origin;
+                    zoomOverlay.style.transform = transform;
+                    zoomOverlay.style.opacity = '1';
+                    hotspots.forEach((h) => {
+                        if (h !== spot) h.style.opacity = '0.2';
+                    });
+                }
 
-        function preloadRemainingImages(map) {
-            Object.entries(map).forEach(([key, src]) => {
-                if (key === 'default') return;
-                preloadImage(src);
-            });
-        }
+                function resetState() {
+                    defaultBg.style.transform = 'scale(1)';
+                    zoomOverlay.style.opacity = '0';
+                    zoomOverlay.style.transform = 'scale(1)';
+                    hotspots.forEach((h) => {
+                        h.style.opacity = '1';
+                    });
+                }
 
-        function handleHover(spot) {
-            const key = spot.dataset.key;
-            const imageUrl = imageMap[key];
-
-            // Zoom logic
-            const x = spot.dataset.zoomX || spot.dataset.posX;
-            const y = spot.dataset.zoomY || spot.dataset.posY;
-
-            const transform = 'scale(1.8)';
-            const origin = `${x}% ${y}%`;
-
-            defaultBg.style.transformOrigin = origin;
-            defaultBg.style.transform = transform;
-
-            zoomOverlay.style.backgroundImage = `url('${imageUrl}')`;
-            zoomOverlay.style.transformOrigin = origin;
-            zoomOverlay.style.transform = transform;
-            zoomOverlay.style.opacity = '1';
-
-            // Fade others
-            hotspots.forEach(h => {
-                if (h !== spot) h.style.opacity = '0.2';
-            });
-        }
-
-        function resetState() {
-            defaultBg.style.transform = 'scale(1)';
-
-            zoomOverlay.style.opacity = '0';
-            zoomOverlay.style.transform = 'scale(1)';
-
-            hotspots.forEach(h => {
-                h.style.opacity = '1';
-            });
-        }
-
-        if (isCanvasVisible()) {
-            hotspots.forEach(spot => {
-                spot.style.left = spot.dataset.posX + '%';
-                spot.style.top = spot.dataset.posY + '%';
-                spot.addEventListener('mouseenter', () => handleHover(spot));
-                spot.addEventListener('mouseleave', resetState);
-            });
-
-            // Initialize immediately for the hero image.
-            defaultBg.style.backgroundImage = `url('${imageMap['default']}')`;
-            preloadImage(imageMap.default, true);
-
-            // Defer the remaining images until the browser is idle.
-            if ('requestIdleCallback' in window) {
-                requestIdleCallback(() => preloadRemainingImages(imageMap), { timeout: 2000 });
-            } else {
-                setTimeout(() => preloadRemainingImages(imageMap), 1200);
-            }
-        }
+                if (isCanvasVisible()) {
+                    hotspots.forEach((spot) => {
+                        spot.style.left = spot.dataset.posX + '%';
+                        spot.style.top = spot.dataset.posY + '%';
+                        spot.addEventListener('mouseenter', () => handleHover(spot));
+                        spot.addEventListener('mouseleave', resetState);
+                    });
+                    defaultBg.style.backgroundImage = `url('${imageMap.default}')`;
+                    preloadImage(imageMap.default, true);
+                    if ('requestIdleCallback' in window) {
+                        requestIdleCallback(() => preloadRemainingImages(imageMap), { timeout: 2000 });
+                    } else {
+                        setTimeout(() => preloadRemainingImages(imageMap), 1200);
+                    }
+                }
+            })();
     </script>
 </body>
 
