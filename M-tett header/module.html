@@ -13,9 +13,9 @@
             theme: {
                 extend: {
                     colors: {
-                        'mtett-navy': '#142A56',
-                        'mtett-blue': '#2563eb',
-                        'mtett-cyan': '#06b6d4',
+                        'mtett-navy': '#12233f',
+                        'mtett-blue': '#4e93d4',
+                        'mtett-cyan': '#b7c6d4',
                     }
                 }
             }
@@ -26,29 +26,24 @@
 <body>
 
     <div class="banner-container">
-        <!-- Logo bar -->
-        <div class="logo-bar">
-            <img src="m-tett-logo.svg" alt="M-TETT Logo" class="h-10">
-        </div>
-
         <div class="main-content">
             <div class="text-column">
                 <h1 id="mainTitle" class="text-3xl lg:text-5xl font-extrabold text-mtett-navy mb-4">
-                    M-TETT <span id="rollingWord">redder badet</span>
+                    M-TETT <span class="text-blue-600">redder badet</span>
                 </h1>
                 <p id="mainDescription" class="text-gray-600 mb-8 text-lg lg:text-xl leading-relaxed">
                     Vi reparerer membran og fliser lokalt – raskere, billigere og mer bærekraftig enn full renovering.
                     Med over 20 års erfaring finner vi løsningen som sparer både tid og penger.
                 </p>
 
-                <div class="flex flex-col sm:flex-row items-start gap-4">
-                    <a href="https://m-tett.no/bestill-oppdrag"
-                        class="main-button bg-mtett-navy text-white font-bold py-3.5 px-8 rounded-xl shadow-xl text-lg">
-                        Bestill utbedring
+                <div class="flex flex-row flex-wrap items-start gap-3 sm:gap-4">
+                    <a href="https://m-tett.no/kontakt/"
+                        class="main-button cta-primary bg-mtett-navy text-white font-bold py-3.5 px-8 rounded-xl shadow-xl text-lg">
+                        Kontakt oss
                     </a>
-                    <a href="https://m-tett.no/ta-kontakt"
-                        class="main-button bg-transparent border-2 border-mtett-navy text-mtett-navy font-bold py-3.5 px-8 rounded-xl text-lg">
-                        Ta kontakt
+                    <a href="https://m-tett.no/bestill-oppdrag/"
+                        class="main-button cta-secondary bg-transparent border-2 border-mtett-navy text-mtett-navy font-bold py-3.5 px-8 rounded-xl text-lg">
+                        Få et prisestimat
                     </a>
                 </div>
 
@@ -74,35 +69,31 @@
             </div>
 
             <div class="canvas-column" id="canvasColumn">
-                <div id="default-bg" style="background-image: url('assets/Ikke-skadet.jpg');"></div>
+                <div id="default-bg" style="background-image: url('assets/Nye bilder/Friskt bad.jpg');"></div>
                 <div id="zoom-overlay"></div>
 
                 <!-- Interaktive punkter -->
-                <div class="hotspot" data-key="sluk" data-pos-x="70" data-pos-y="77">
+                <div class="hotspot" data-key="sluk" data-pos-x="57" data-pos-y="73">
                     <div class="hotspot-inner">
-                        <div class="ripple"></div>
                         <span class="hotspot-label">Lekkasje ved sluk</span>
                     </div>
                 </div>
 
-                <div class="hotspot" data-key="flis" data-pos-x="40" data-pos-y="90">
+                <div class="hotspot" data-key="flis" data-pos-x="50" data-pos-y="90" data-zoom-x="57" data-zoom-y="90">
                     <div class="hotspot-inner">
-                        <div class="ripple"></div>
                         <span class="hotspot-label">Sprekk i flis</span>
                     </div>
                 </div>
 
-                <div class="hotspot" data-key="sisterne" data-pos-x="90" data-pos-y="65">
+                <div class="hotspot" data-key="sisterne" data-pos-x="23" data-pos-y="54">
                     <div class="hotspot-inner">
-                        <div class="ripple"></div>
                         <span class="hotspot-label">Innebygget sisterne</span>
                     </div>
                 </div>
 
-                <div class="hotspot" data-key="armatur" data-pos-x="25" data-pos-y="50">
+                <div class="hotspot" data-key="armatur" data-pos-x="87" data-pos-y="60">
                     <div class="hotspot-inner">
-                        <div class="ripple"></div>
-                        <span class="hotspot-label">Innebygget armatur</span>
+                        <span class="hotspot-label">Armatur</span>
                     </div>
                 </div>
             </div>
@@ -113,85 +104,23 @@
         const canvasColumn = document.getElementById('canvasColumn');
         const defaultBg = document.getElementById('default-bg');
         const zoomOverlay = document.getElementById('zoom-overlay');
-        const mainTitle = document.getElementById('mainTitle');
-        const mainDescription = document.getElementById('mainDescription');
         const hotspots = document.querySelectorAll('.hotspot');
 
         const imageMap = {
-            'default': 'assets/Ikke-skadet.jpg',
-            'sluk': 'assets/Sluk.jpg',
-            'flis': 'assets/Skader flis.jpg',
-            'sisterne': 'assets/Sisterne.jpg',
-            'armatur': 'assets/Innebygget armatur.jpg'
+            'default': 'assets/Nye bilder/Friskt bad.jpg',
+            'sluk': 'assets/Nye bilder/Sluk.jpg',
+            'flis': 'assets/Nye bilder/Sprekk i flis.jpg',
+            'sisterne': 'assets/Nye bilder/Innebygd sisterne.jpg',
+            'armatur': 'assets/Nye bilder/Armatur.jpg'
         };
-
-        const contentMap = {
-            'default': {
-                title: 'M-TETT <span id="rollingWord">redder badet</span>',
-                description: 'Vi reparerer membran og fliser lokalt – raskere, billigere og mer bærekraftig enn full renovering. Med over 20 års erfaring finner vi løsningen som sparer både tid og penger.'
-            },
-            'sluk': {
-                title: 'Tett <span class="text-blue-600">sluk og membran</span>',
-                description: 'Det lekker ofte mellom sluk og membran. Vi utbedrer skaden uten å rive hele badet, og sikrer at overgangen er 100% vanntett i henhold til våtromsnormen.'
-            },
-            'flis': {
-                title: 'Fiks <span class="text-blue-600">sprukne fliser</span>',
-                description: 'En sprekk i våtsone kan føre til store fuktskader. Vi skifter ut enkelte fliser og reparerer membranen bak, slik at resultatet blir både estetisk og teknisk perfekt.'
-            },
-            'sisterne': {
-                title: 'Reparer <span class="text-blue-600">skjult sisterne</span>',
-                description: 'Lekkasjer i innebygde sisterner er en gjenganger. Vi åpner, reparerer og lukker konstruksjonen slik at du slipper å bekymre deg for skjulte fuktskader.'
-            },
-            'armatur': {
-                title: 'Tett <span class="text-blue-600">innebygget armatur</span>',
-                description: 'Lekkasjer bak flisene ved innebygde blandebatterier kan være vanskelige å oppdage. Vi utbedrer lekkasjen lokalt og sørger for at våtrommet forblir trygt.'
-            }
-        };
-
-        const rollingWords = ["redder badet", "utbedrer sluk", "fikser fliser", "tetter membran"];
-        let rollingIndex = 0;
-        let rollingInterval = null;
-
-        function startRolling() {
-            if (rollingInterval) return;
-            rollingInterval = setInterval(() => {
-                rollingIndex = (rollingIndex + 1) % rollingWords.length;
-                updateRollingWord(rollingWords[rollingIndex]);
-            }, 3000);
-        }
-
-        function stopRolling() {
-            clearInterval(rollingInterval);
-            rollingInterval = null;
-        }
-
-        function updateRollingWord(word) {
-            const span = document.getElementById('rollingWord');
-            if (!span) return;
-            span.style.opacity = '0';
-            span.style.transform = 'translateY(-10px)';
-            setTimeout(() => {
-                span.textContent = word;
-                span.style.transform = 'translateY(10px)';
-                setTimeout(() => {
-                    span.style.opacity = '1';
-                    span.style.transform = 'translateY(0)';
-                }, 50);
-            }, 300);
-        }
 
         function handleHover(spot) {
             const key = spot.dataset.key;
-            const content = contentMap[key];
             const imageUrl = imageMap[key];
 
-            stopRolling();
-            mainTitle.innerHTML = content.title;
-            mainDescription.textContent = content.description;
-
             // Zoom logic
-            const x = spot.dataset.posX;
-            const y = spot.dataset.posY;
+            const x = spot.dataset.zoomX || spot.dataset.posX;
+            const y = spot.dataset.zoomY || spot.dataset.posY;
 
             const transform = 'scale(1.8)';
             const origin = `${x}% ${y}%`;
@@ -211,10 +140,6 @@
         }
 
         function resetState() {
-            const content = contentMap['default'];
-            mainTitle.innerHTML = content.title;
-            mainDescription.textContent = content.description;
-
             defaultBg.style.transform = 'scale(1)';
 
             zoomOverlay.style.opacity = '0';
@@ -223,8 +148,6 @@
             hotspots.forEach(h => {
                 h.style.opacity = '1';
             });
-
-            startRolling();
         }
 
         hotspots.forEach(spot => {
@@ -236,8 +159,6 @@
 
         // Initialize
         window.onload = () => {
-            startRolling();
-
             // Default background
             defaultBg.style.backgroundImage = `url('${imageMap['default']}')`;
         };
