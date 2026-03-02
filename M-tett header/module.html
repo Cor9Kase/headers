@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M-TETT - Spesialister på våtrom</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
     <link rel="stylesheet" href="module.css">
+    <link rel="preload" as="image" href="assets/Nye bilder/optimized/friskt-bad-1600.webp" type="image/webp"
+        fetchpriority="high">
 
     <script>
         tailwind.config = {
@@ -69,7 +71,7 @@
             </div>
 
             <div class="canvas-column" id="canvasColumn">
-                <div id="default-bg" style="background-image: url('assets/Nye bilder/Friskt bad.jpg');"></div>
+                <div id="default-bg" style="background-image: url('assets/Nye bilder/optimized/friskt-bad-1600.webp');"></div>
                 <div id="zoom-overlay"></div>
 
                 <!-- Interaktive punkter -->
@@ -106,21 +108,57 @@
         const zoomOverlay = document.getElementById('zoom-overlay');
         const hotspots = document.querySelectorAll('.hotspot');
 
-        const imageMap = {
-            'default': 'assets/Nye bilder/Friskt bad.jpg',
-            'sluk': 'assets/Nye bilder/Sluk.jpg',
-            'flis': 'assets/Nye bilder/Sprekk i flis.jpg',
-            'sisterne': 'assets/Nye bilder/Innebygd sisterne.jpg',
-            'armatur': 'assets/Nye bilder/Armatur.jpg'
+        const baseImageMap = {
+            'default': {
+                webp: 'assets/Nye bilder/optimized/friskt-bad-1600.webp',
+                jpg: 'assets/Nye bilder/optimized/friskt-bad-1600.jpg'
+            },
+            'sluk': {
+                webp: 'assets/Nye bilder/optimized/sluk-1600.webp',
+                jpg: 'assets/Nye bilder/optimized/sluk-1600.jpg'
+            },
+            'flis': {
+                webp: 'assets/Nye bilder/optimized/sprekk-i-flis-1600.webp',
+                jpg: 'assets/Nye bilder/optimized/sprekk-i-flis-1600.jpg'
+            },
+            'sisterne': {
+                webp: 'assets/Nye bilder/optimized/innebygd-sisterne-1600.webp',
+                jpg: 'assets/Nye bilder/optimized/innebygd-sisterne-1600.jpg'
+            },
+            'armatur': {
+                webp: 'assets/Nye bilder/optimized/armatur-1600.webp',
+                jpg: 'assets/Nye bilder/optimized/armatur-1600.jpg'
+            }
         };
 
-        // Preload images so the first interaction feels instant.
-        function preloadImages(map) {
-            Object.values(map).forEach((src, index) => {
-                const img = new Image();
-                img.decoding = 'async';
-                if (index === 0) img.fetchPriority = 'high';
-                img.src = src;
+        const supportsWebP = (() => {
+            try {
+                const canvas = document.createElement('canvas');
+                return canvas.toDataURL('image/webp').startsWith('data:image/webp');
+            } catch (error) {
+                return false;
+            }
+        })();
+
+        const imageMap = Object.fromEntries(
+            Object.entries(baseImageMap).map(([key, formats]) => [key, supportsWebP ? formats.webp : formats.jpg])
+        );
+
+        function isCanvasVisible() {
+            return canvasColumn && window.getComputedStyle(canvasColumn).display !== 'none';
+        }
+
+        function preloadImage(src, highPriority = false) {
+            const img = new Image();
+            img.decoding = 'async';
+            if (highPriority) img.fetchPriority = 'high';
+            img.src = src;
+        }
+
+        function preloadRemainingImages(map) {
+            Object.entries(map).forEach(([key, src]) => {
+                if (key === 'default') return;
+                preloadImage(src);
             });
         }
 
@@ -160,16 +198,25 @@
             });
         }
 
-        hotspots.forEach(spot => {
-            spot.style.left = spot.dataset.posX + '%';
-            spot.style.top = spot.dataset.posY + '%';
-            spot.addEventListener('mouseenter', () => handleHover(spot));
-            spot.addEventListener('mouseleave', resetState);
-        });
+        if (isCanvasVisible()) {
+            hotspots.forEach(spot => {
+                spot.style.left = spot.dataset.posX + '%';
+                spot.style.top = spot.dataset.posY + '%';
+                spot.addEventListener('mouseenter', () => handleHover(spot));
+                spot.addEventListener('mouseleave', resetState);
+            });
 
-        // Initialize immediately (avoid waiting for full window load).
-        defaultBg.style.backgroundImage = `url('${imageMap['default']}')`;
-        preloadImages(imageMap);
+            // Initialize immediately for the hero image.
+            defaultBg.style.backgroundImage = `url('${imageMap['default']}')`;
+            preloadImage(imageMap.default, true);
+
+            // Defer the remaining images until the browser is idle.
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => preloadRemainingImages(imageMap), { timeout: 2000 });
+            } else {
+                setTimeout(() => preloadRemainingImages(imageMap), 1200);
+            }
+        }
     </script>
 </body>
 
