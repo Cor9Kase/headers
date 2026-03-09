@@ -23,6 +23,10 @@
       --mid: #34535a;
       --muted: #6f878c;
       --border: #a5bcc0;
+      --hero-min-height: 92vh;
+      --content-pad-top: 80px;
+      --content-pad-bottom: 80px;
+      --content-pad-side: 60px;
     }
 
     body {
@@ -31,7 +35,7 @@
     }
 
     .hero {
-      min-height: 92vh;
+      min-height: var(--hero-min-height);
       background: #fff;
       display: flex;
       align-items: center;
@@ -42,7 +46,7 @@
       width: 100%;
       max-width: 1360px;
       margin: 0 auto;
-      padding: 80px 60px;
+      padding: var(--content-pad-top) var(--content-pad-side) var(--content-pad-bottom);
       display: grid;
       grid-template-columns: 1.06fr 0.94fr;
       grid-template-areas:
@@ -311,7 +315,7 @@
           "visual"
           "actions"
           "stats";
-        padding: 56px 24px;
+        padding: var(--content-pad-top) 24px var(--content-pad-bottom);
         gap: 24px;
       }
 
@@ -353,7 +357,7 @@
 
     @media (max-width: 600px) {
       .hero-content {
-        padding: 42px 16px;
+        padding: var(--content-pad-top) 16px var(--content-pad-bottom);
         gap: 18px;
       }
 
@@ -409,8 +413,8 @@
   <section class="hero">
     <div class="hero-content">
       <div class="hero-copy">
-        <h1>Kaldt gulv?<br>Vi fikser <em>varmekabelen</em>.</h1>
-        <p class="desc">Vi finner hvor feilen ligger og reparerer den — uten unødig riving og uten lang ventetid.</p>
+        <h1 id="heroHeading">Kaldt gulv?<br>Vi fikser <em>varmekabelen</em>.</h1>
+        <p id="heroDescription" class="desc">Vi finner hvor feilen ligger og reparerer den — uten unødig riving og uten lang ventetid.</p>
       </div>
 
       <div class="visual">
@@ -425,14 +429,14 @@
       </div>
 
       <div class="actions">
-        <a href="https://m-tek.no/bestill-oppdrag/" class="btn-main">Kontakt oss
+        <a id="primaryCta" href="https://m-tek.no/bestill-oppdrag/" class="btn-main">Kontakt oss
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round">
             <path d="M5 12h14" />
             <path d="m12 5 7 7-7 7" />
           </svg>
         </a>
-        <a href="tel:04915" class="btn-ghost">Ring oss</a>
+        <a id="secondaryCta" href="tel:04915" class="btn-ghost">Ring oss</a>
       </div>
 
       <div class="stats">
@@ -453,6 +457,81 @@
   </section>
 
   <script>
+    function applyEmbedConfig() {
+      const params = new URLSearchParams(window.location.search);
+      const root = document.documentElement;
+      const heroHeading = document.getElementById('heroHeading');
+      const heroDescription = document.getElementById('heroDescription');
+      const primaryCta = document.getElementById('primaryCta');
+      const secondaryCta = document.getElementById('secondaryCta');
+
+      function decodeBase64Json(value) {
+        try {
+          return JSON.parse(atob(value));
+        } catch (error) {
+          return null;
+        }
+      }
+
+      const textFields = [
+        { key: 'primary_text', node: primaryCta },
+        { key: 'secondary_text', node: secondaryCta }
+      ];
+      const contentFields = [
+        { key: 'headline_html_b64', node: heroHeading, mode: 'html-b64' },
+        { key: 'description', node: heroDescription, mode: 'text' }
+      ];
+      const linkFields = [
+        { key: 'primary_url', node: primaryCta },
+        { key: 'secondary_url', node: secondaryCta }
+      ];
+      const styleFields = [
+        { key: 'min_height', variable: '--hero-min-height' },
+        { key: 'padding_top', variable: '--content-pad-top' },
+        { key: 'padding_bottom', variable: '--content-pad-bottom' }
+      ];
+
+      textFields.forEach(({ key, node }) => {
+        const value = params.get(key);
+        if (node && value) {
+          node.childNodes[0].textContent = decodeURIComponent(value);
+        }
+      });
+
+      contentFields.forEach(({ key, node, mode }) => {
+        const value = params.get(key);
+        if (!node || !value) {
+          return;
+        }
+
+        if (mode === 'html-b64') {
+          const decoded = decodeBase64Json(value);
+          if (decoded !== null) {
+            node.innerHTML = decoded;
+          }
+          return;
+        }
+
+        node.textContent = decodeURIComponent(value);
+      });
+
+      linkFields.forEach(({ key, node }) => {
+        const value = params.get(key);
+        if (node && value) {
+          node.href = decodeURIComponent(value);
+        }
+      });
+
+      styleFields.forEach(({ key, variable }) => {
+        const value = params.get(key);
+        if (value) {
+          root.style.setProperty(variable, decodeURIComponent(value));
+        }
+      });
+    }
+
+    applyEmbedConfig();
+
     function buildIntro() {
       const intro = gsap.timeline();
       intro.to('h1', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.35);
@@ -1490,6 +1569,54 @@
         setSceneLabel('Kunne ikke laste 3D-scenen.');
         console.error(error);
       });
+
+    function notifyParentHeight() {
+      if (window.parent === window) {
+        return;
+      }
+
+      const height = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight,
+        document.body.offsetHeight
+      );
+
+      window.parent.postMessage({
+        type: 'mtek-header-b',
+        action: 'height',
+        height
+      }, '*');
+    }
+
+    document.addEventListener('click', (event) => {
+      const link = event.target.closest('a[href^="#"]');
+      if (!link || window.parent === window) {
+        return;
+      }
+
+      const target = link.getAttribute('href');
+      if (!target || target === '#') {
+        return;
+      }
+
+      event.preventDefault();
+      window.parent.postMessage({
+        type: 'mtek-header-b',
+        action: 'scrollTo',
+        target: target.slice(1)
+      }, '*');
+    });
+
+    window.addEventListener('load', notifyParentHeight);
+    window.addEventListener('resize', notifyParentHeight);
+
+    if (window.ResizeObserver) {
+      const pageResizeObserver = new ResizeObserver(() => {
+        notifyParentHeight();
+      });
+      pageResizeObserver.observe(document.body);
+    }
   </script>
 </body>
 

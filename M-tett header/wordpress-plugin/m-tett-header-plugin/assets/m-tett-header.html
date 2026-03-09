@@ -100,6 +100,7 @@
             transform: translate(-50%, -50%);
             cursor: pointer;
             transition: opacity 0.35s ease, transform 0.35s ease;
+            text-decoration: none;
         }
 
         .mtett-front-module .hotspot-inner {
@@ -172,10 +173,14 @@
             --mtett-bg-soft: #e7edf3;
             --mtett-border: #b7c6d4;
             --mtett-text-muted: rgba(18, 35, 63, .78);
-            padding: 12px;
+            --module-min-height: 92vh;
+            --module-pad-top: 12px;
+            --module-pad-bottom: 12px;
+            --module-pad-side: 12px;
+            padding: var(--module-pad-top) var(--module-pad-side) var(--module-pad-bottom);
             background: var(--mtett-bg);
             color: var(--mtett-navy);
-            min-height: 100vh;
+            min-height: var(--module-min-height);
             display: flex;
             align-items: center;
         }
@@ -257,7 +262,7 @@
 
         @media (max-width: 1024px) {
             .mtett-front-module {
-                padding: 8px;
+                padding: var(--module-pad-top) 8px var(--module-pad-bottom);
             }
 
             #mtett-front-module-root .text-column {
@@ -302,11 +307,11 @@
                     </p>
 
                     <div class="flex flex-row flex-wrap items-start gap-3 sm:gap-4">
-                        <a href="https://m-tett.no/kontakt/"
+                        <a id="primaryCta" href="https://m-tett.no/kontakt/"
                             class="main-button cta-primary font-bold py-3.5 px-8 rounded-xl shadow-xl text-lg">
                             Kontakt oss
                         </a>
-                        <a href="https://m-tett.no/bestill-oppdrag/"
+                        <a id="secondaryCta" href="tel:04915"
                             class="main-button cta-secondary font-bold py-3.5 px-8 rounded-xl text-lg">
                             Ring oss
                         </a>
@@ -338,30 +343,30 @@
                     <div id="zoom-overlay"></div>
 
                     <!-- Interaktive punkter -->
-                    <div class="hotspot" data-key="sluk" data-pos-x="57" data-pos-y="73">
+                    <a class="hotspot" data-key="sluk" data-pos-x="57" data-pos-y="73" href="https://m-tett.no/kontakt/" id="hotspotSluk">
                         <div class="hotspot-inner">
-                            <span class="hotspot-label">Lekkasje ved sluk</span>
+                            <span class="hotspot-label" id="hotspotSlukLabel">Lekkasje ved sluk</span>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="hotspot" data-key="flis" data-pos-x="50" data-pos-y="90" data-zoom-x="57"
-                        data-zoom-y="90">
+                    <a class="hotspot" data-key="flis" data-pos-x="50" data-pos-y="90" data-zoom-x="57"
+                        data-zoom-y="90" href="https://m-tett.no/kontakt/" id="hotspotFlis">
                         <div class="hotspot-inner">
-                            <span class="hotspot-label">Sprekk i flis</span>
+                            <span class="hotspot-label" id="hotspotFlisLabel">Sprekk i flis</span>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="hotspot" data-key="sisterne" data-pos-x="23" data-pos-y="54">
+                    <a class="hotspot" data-key="sisterne" data-pos-x="23" data-pos-y="54" href="https://m-tett.no/kontakt/" id="hotspotSisterne">
                         <div class="hotspot-inner">
-                            <span class="hotspot-label">Innebygget sisterne</span>
+                            <span class="hotspot-label" id="hotspotSisterneLabel">Innebygget sisterne</span>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="hotspot" data-key="armatur" data-pos-x="87" data-pos-y="60">
+                    <a class="hotspot" data-key="armatur" data-pos-x="87" data-pos-y="60" href="https://m-tett.no/kontakt/" id="hotspotArmatur">
                         <div class="hotspot-inner">
-                            <span class="hotspot-label">Armatur</span>
+                            <span class="hotspot-label" id="hotspotArmaturLabel">Armatur</span>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -377,12 +382,125 @@
                 const hotspots = root.querySelectorAll('.hotspot');
                 if (!defaultBg || !zoomOverlay || !hotspots.length) return;
 
+                function applyEmbedConfig() {
+                    const params = new URLSearchParams(window.location.search);
+                    const rootElement = document.documentElement;
+                    const mainTitle = root.querySelector('#mainTitle');
+                    const mainDescription = root.querySelector('#mainDescription');
+                    const primaryCta = root.querySelector('#primaryCta');
+                    const secondaryCta = root.querySelector('#secondaryCta');
+                    const hotspotFields = [
+                        { textKey: 'hotspot_sluk_text', urlKey: 'hotspot_sluk_url', node: root.querySelector('#hotspotSluk'), label: root.querySelector('#hotspotSlukLabel') },
+                        { textKey: 'hotspot_flis_text', urlKey: 'hotspot_flis_url', node: root.querySelector('#hotspotFlis'), label: root.querySelector('#hotspotFlisLabel') },
+                        { textKey: 'hotspot_sisterne_text', urlKey: 'hotspot_sisterne_url', node: root.querySelector('#hotspotSisterne'), label: root.querySelector('#hotspotSisterneLabel') },
+                        { textKey: 'hotspot_armatur_text', urlKey: 'hotspot_armatur_url', node: root.querySelector('#hotspotArmatur'), label: root.querySelector('#hotspotArmaturLabel') }
+                    ];
+
+                    function decodeBase64Json(value) {
+                        try {
+                            return JSON.parse(atob(value));
+                        } catch (error) {
+                            return null;
+                        }
+                    }
+
+                    const contentFields = [
+                        { key: 'headline_html_b64', node: mainTitle, mode: 'html-b64' },
+                        { key: 'description', node: mainDescription, mode: 'text' }
+                    ];
+                    const textFields = [
+                        { key: 'primary_text', node: primaryCta },
+                        { key: 'secondary_text', node: secondaryCta }
+                    ];
+                    const linkFields = [
+                        { key: 'primary_url', node: primaryCta },
+                        { key: 'secondary_url', node: secondaryCta }
+                    ];
+                    const styleFields = [
+                        { key: 'min_height', variable: '--module-min-height' },
+                        { key: 'padding_top', variable: '--module-pad-top' },
+                        { key: 'padding_bottom', variable: '--module-pad-bottom' }
+                    ];
+
+                    contentFields.forEach(({ key, node, mode }) => {
+                        const value = params.get(key);
+                        if (!node || !value) {
+                            return;
+                        }
+
+                        if (mode === 'html-b64') {
+                            const decoded = decodeBase64Json(value);
+                            if (decoded !== null) {
+                                node.innerHTML = decoded;
+                            }
+                            return;
+                        }
+
+                        node.textContent = decodeURIComponent(value);
+                    });
+
+                    textFields.forEach(({ key, node }) => {
+                        const value = params.get(key);
+                        if (node && value) {
+                            node.textContent = decodeURIComponent(value);
+                        }
+                    });
+
+                    linkFields.forEach(({ key, node }) => {
+                        const value = params.get(key);
+                        if (node && value) {
+                            node.href = decodeURIComponent(value);
+                        }
+                    });
+
+                    hotspotFields.forEach(({ textKey, urlKey, node, label }) => {
+                        const textValue = params.get(textKey);
+                        const urlValue = params.get(urlKey);
+
+                        if (label && textValue) {
+                            label.textContent = decodeURIComponent(textValue);
+                        }
+
+                        if (node && urlValue) {
+                            node.href = decodeURIComponent(urlValue);
+                        }
+                    });
+
+                    styleFields.forEach(({ key, variable }) => {
+                        const value = params.get(key);
+                        if (value) {
+                            rootElement.style.setProperty(variable, decodeURIComponent(value));
+                        }
+                    });
+                }
+
+                function notifyParentHeight() {
+                    if (window.parent === window) {
+                        return;
+                    }
+
+                    const height = Math.max(
+                        document.documentElement.scrollHeight,
+                        document.body.scrollHeight,
+                        document.documentElement.offsetHeight,
+                        document.body.offsetHeight
+                    );
+
+                    window.parent.postMessage({
+                        type: 'mtett-header',
+                        action: 'height',
+                        height
+                    }, '*');
+                }
+
+                applyEmbedConfig();
+
                 const imageMap = {
-                    'default': 'assets/Nye bilder/optimized/friskt-bad-1600.webp',
-                    'sluk': 'assets/Nye bilder/optimized/sluk-1600.webp',
-                    'flis': 'assets/Nye bilder/optimized/sprekk-i-flis-1600.webp',
-                    'sisterne': 'assets/Nye bilder/optimized/innebygd-sisterne-1600.webp',
-                    'armatur': 'assets/Nye bilder/optimized/armatur-1600.webp'
+                    'default': 'images/friskt-bad-1600.webp',
+                    'sluk': 'images/sluk-1600.webp',
+                    'flis': 'images/sprekk-i-flis-1600.webp',
+                    'sisterne': 'images/innebygd-sisterne-1600.webp',
+                    'armatur': 'images/armatur-1600.webp'
                 };
 
                 function isCanvasVisible() {
@@ -445,6 +563,18 @@
                         setTimeout(() => preloadRemainingImages(imageMap), 1200);
                     }
                 }
+
+                window.addEventListener('load', notifyParentHeight);
+                window.addEventListener('resize', notifyParentHeight);
+
+                if (window.ResizeObserver) {
+                    const pageResizeObserver = new ResizeObserver(() => {
+                        notifyParentHeight();
+                    });
+                    pageResizeObserver.observe(document.body);
+                }
+
+                notifyParentHeight();
             })();
     </script>
 </body>
