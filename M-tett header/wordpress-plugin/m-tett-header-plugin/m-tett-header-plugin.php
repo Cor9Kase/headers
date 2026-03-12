@@ -28,10 +28,14 @@ function mtett_header_get_defaults() {
 		'hotspot_sluk_url'      => 'https://m-tett.no/kontakt/',
 		'hotspot_flis_text'     => 'Sprekk i flis',
 		'hotspot_flis_url'      => 'https://m-tett.no/kontakt/',
+		'hotspot_fall_text'     => 'Feil fall',
+		'hotspot_fall_url'      => 'https://m-tett.no/kontakt/',
 		'hotspot_sisterne_text' => 'Innebygget sisterne',
 		'hotspot_sisterne_url'  => 'https://m-tett.no/kontakt/',
-		'hotspot_armatur_text'  => 'Armatur',
-		'hotspot_armatur_url'   => 'https://m-tett.no/kontakt/',
+		'hotspot_rorbrudd_text' => 'Rørbrudd i vegg',
+		'hotspot_rorbrudd_url'  => 'https://m-tett.no/kontakt/',
+		'hotspot_terskel_text'  => 'Terskel',
+		'hotspot_terskel_url'   => 'https://m-tett.no/kontakt/',
 		'auto_header_offset' => '1',
 	);
 }
@@ -68,10 +72,14 @@ function mtett_header_sanitize_options($input) {
 		'hotspot_sluk_url'      => sanitize_text_field($input['hotspot_sluk_url'] ?? $defaults['hotspot_sluk_url']),
 		'hotspot_flis_text'     => sanitize_text_field($input['hotspot_flis_text'] ?? $defaults['hotspot_flis_text']),
 		'hotspot_flis_url'      => sanitize_text_field($input['hotspot_flis_url'] ?? $defaults['hotspot_flis_url']),
+		'hotspot_fall_text'     => sanitize_text_field($input['hotspot_fall_text'] ?? $defaults['hotspot_fall_text']),
+		'hotspot_fall_url'      => sanitize_text_field($input['hotspot_fall_url'] ?? $defaults['hotspot_fall_url']),
 		'hotspot_sisterne_text' => sanitize_text_field($input['hotspot_sisterne_text'] ?? $defaults['hotspot_sisterne_text']),
 		'hotspot_sisterne_url'  => sanitize_text_field($input['hotspot_sisterne_url'] ?? $defaults['hotspot_sisterne_url']),
-		'hotspot_armatur_text'  => sanitize_text_field($input['hotspot_armatur_text'] ?? $defaults['hotspot_armatur_text']),
-		'hotspot_armatur_url'   => sanitize_text_field($input['hotspot_armatur_url'] ?? $defaults['hotspot_armatur_url']),
+		'hotspot_rorbrudd_text' => sanitize_text_field($input['hotspot_rorbrudd_text'] ?? $defaults['hotspot_rorbrudd_text']),
+		'hotspot_rorbrudd_url'  => sanitize_text_field($input['hotspot_rorbrudd_url'] ?? $defaults['hotspot_rorbrudd_url']),
+		'hotspot_terskel_text'  => sanitize_text_field($input['hotspot_terskel_text'] ?? $defaults['hotspot_terskel_text']),
+		'hotspot_terskel_url'   => sanitize_text_field($input['hotspot_terskel_url'] ?? $defaults['hotspot_terskel_url']),
 		'auto_header_offset' => empty($input['auto_header_offset']) ? '0' : '1',
 	);
 }
@@ -199,6 +207,13 @@ function mtett_header_render_settings_page() {
 					</td>
 				</tr>
 				<tr>
+					<th scope="row"><label for="mtett-hotspot-fall-text">Hotspot feil fall</label></th>
+					<td>
+						<input id="mtett-hotspot-fall-text" name="<?php echo esc_attr(MTETT_HEADER_OPTION_KEY); ?>[hotspot_fall_text]" type="text" class="regular-text" value="<?php echo esc_attr($options['hotspot_fall_text']); ?>">
+						<p><input name="<?php echo esc_attr(MTETT_HEADER_OPTION_KEY); ?>[hotspot_fall_url]" type="text" class="regular-text" value="<?php echo esc_attr($options['hotspot_fall_url']); ?>"></p>
+					</td>
+				</tr>
+				<tr>
 					<th scope="row"><label for="mtett-hotspot-sisterne-text">Hotspot sisterne</label></th>
 					<td>
 						<input id="mtett-hotspot-sisterne-text" name="<?php echo esc_attr(MTETT_HEADER_OPTION_KEY); ?>[hotspot_sisterne_text]" type="text" class="regular-text" value="<?php echo esc_attr($options['hotspot_sisterne_text']); ?>">
@@ -206,10 +221,17 @@ function mtett_header_render_settings_page() {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="mtett-hotspot-armatur-text">Hotspot armatur</label></th>
+					<th scope="row"><label for="mtett-hotspot-rorbrudd-text">Hotspot rørbrudd</label></th>
 					<td>
-						<input id="mtett-hotspot-armatur-text" name="<?php echo esc_attr(MTETT_HEADER_OPTION_KEY); ?>[hotspot_armatur_text]" type="text" class="regular-text" value="<?php echo esc_attr($options['hotspot_armatur_text']); ?>">
-						<p><input name="<?php echo esc_attr(MTETT_HEADER_OPTION_KEY); ?>[hotspot_armatur_url]" type="text" class="regular-text" value="<?php echo esc_attr($options['hotspot_armatur_url']); ?>"></p>
+						<input id="mtett-hotspot-rorbrudd-text" name="<?php echo esc_attr(MTETT_HEADER_OPTION_KEY); ?>[hotspot_rorbrudd_text]" type="text" class="regular-text" value="<?php echo esc_attr($options['hotspot_rorbrudd_text']); ?>">
+						<p><input name="<?php echo esc_attr(MTETT_HEADER_OPTION_KEY); ?>[hotspot_rorbrudd_url]" type="text" class="regular-text" value="<?php echo esc_attr($options['hotspot_rorbrudd_url']); ?>"></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="mtett-hotspot-terskel-text">Hotspot terskel</label></th>
+					<td>
+						<input id="mtett-hotspot-terskel-text" name="<?php echo esc_attr(MTETT_HEADER_OPTION_KEY); ?>[hotspot_terskel_text]" type="text" class="regular-text" value="<?php echo esc_attr($options['hotspot_terskel_text']); ?>">
+						<p><input name="<?php echo esc_attr(MTETT_HEADER_OPTION_KEY); ?>[hotspot_terskel_url]" type="text" class="regular-text" value="<?php echo esc_attr($options['hotspot_terskel_url']); ?>"></p>
 						<p class="description">Hotspots fungerer som klikkbare knapper.</p>
 					</td>
 				</tr>
@@ -242,10 +264,14 @@ function mtett_header_render_shortcode() {
 			'hotspot_sluk_url'      => $options['hotspot_sluk_url'],
 			'hotspot_flis_text'     => $options['hotspot_flis_text'],
 			'hotspot_flis_url'      => $options['hotspot_flis_url'],
+			'hotspot_fall_text'     => $options['hotspot_fall_text'],
+			'hotspot_fall_url'      => $options['hotspot_fall_url'],
 			'hotspot_sisterne_text' => $options['hotspot_sisterne_text'],
 			'hotspot_sisterne_url'  => $options['hotspot_sisterne_url'],
-			'hotspot_armatur_text'  => $options['hotspot_armatur_text'],
-			'hotspot_armatur_url'   => $options['hotspot_armatur_url'],
+			'hotspot_rorbrudd_text' => $options['hotspot_rorbrudd_text'],
+			'hotspot_rorbrudd_url'  => $options['hotspot_rorbrudd_url'],
+			'hotspot_terskel_text'  => $options['hotspot_terskel_text'],
+			'hotspot_terskel_url'   => $options['hotspot_terskel_url'],
 			'min_height'     => $options['hero_min_height'],
 			'padding_top'    => $options['padding_top'],
 			'padding_bottom' => $options['padding_bottom'],

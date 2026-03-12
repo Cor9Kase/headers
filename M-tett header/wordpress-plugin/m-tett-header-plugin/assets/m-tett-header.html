@@ -111,29 +111,30 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.75);
-            color: #315D6D;
-            padding: .75rem 1.2rem;
-            border-radius: .95rem;
-            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.66);
+            color: #27495b;
+            padding: .55rem .9rem;
+            border-radius: 999px;
+            font-size: .82rem;
             font-weight: 700;
+            letter-spacing: -0.01em;
             white-space: nowrap;
-            border: 1px solid rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 8px 24px rgba(20, 42, 86, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 6px 18px rgba(20, 42, 86, 0.12);
             transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
         }
 
         .mtett-front-module .hotspot:hover {
-            transform: translate(-50%, -50%) scale(1.02);
+            transform: translate(-50%, -50%) scale(1.01);
         }
 
         .mtett-front-module .hotspot:hover .hotspot-label {
-            background: rgba(255, 255, 255, 0.93);
+            background: rgba(255, 255, 255, 0.9);
             color: #1F3B4D;
-            transform: translateY(-2px);
-            box-shadow: 0 14px 30px rgba(20, 42, 86, 0.22);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(20, 42, 86, 0.16);
         }
 
         .mtett-front-module .main-button {
@@ -243,14 +244,14 @@
         }
 
         #mtett-front-module-root .hotspot-label {
-            font-size: .9rem;
-            background: rgba(18, 35, 63, .9);
+            font-size: .8rem;
+            background: rgba(18, 35, 63, .82);
             color: #fff;
-            border: 1px solid rgba(78, 147, 212, .45);
+            border: 1px solid rgba(78, 147, 212, .28);
         }
 
         #mtett-front-module-root .hotspot:hover .hotspot-label {
-            background: var(--mtett-blue);
+            background: rgba(78, 147, 212, .92);
             color: #fff;
         }
 
@@ -274,8 +275,8 @@
             }
 
             #mtett-front-module-root .hotspot-label {
-                font-size: .78rem;
-                padding: .6rem .85rem;
+                font-size: .72rem;
+                padding: .5rem .75rem;
             }
         }
 
@@ -356,15 +357,29 @@
                         </div>
                     </a>
 
+                    <a class="hotspot" data-key="fall" data-pos-x="60" data-pos-y="78" data-zoom-x="58"
+                        data-zoom-y="79" href="https://m-tett.no/kontakt/" id="hotspotFall">
+                        <div class="hotspot-inner">
+                            <span class="hotspot-label" id="hotspotFallLabel">Feil fall</span>
+                        </div>
+                    </a>
+
                     <a class="hotspot" data-key="sisterne" data-pos-x="23" data-pos-y="54" href="https://m-tett.no/kontakt/" id="hotspotSisterne">
                         <div class="hotspot-inner">
                             <span class="hotspot-label" id="hotspotSisterneLabel">Innebygget sisterne</span>
                         </div>
                     </a>
 
-                    <a class="hotspot" data-key="armatur" data-pos-x="87" data-pos-y="60" href="https://m-tett.no/kontakt/" id="hotspotArmatur">
+                    <a class="hotspot" data-key="rorbrudd" data-pos-x="84" data-pos-y="56" href="https://m-tett.no/kontakt/" id="hotspotRorbrudd">
                         <div class="hotspot-inner">
-                            <span class="hotspot-label" id="hotspotArmaturLabel">Armatur</span>
+                            <span class="hotspot-label" id="hotspotRorbruddLabel">Rørbrudd i vegg</span>
+                        </div>
+                    </a>
+
+                    <a class="hotspot" data-key="terskel" data-pos-x="18" data-pos-y="84" data-zoom-x="22"
+                        data-zoom-y="84" href="https://m-tett.no/kontakt/" id="hotspotTerskel">
+                        <div class="hotspot-inner">
+                            <span class="hotspot-label" id="hotspotTerskelLabel">Terskel</span>
                         </div>
                     </a>
                 </div>
@@ -392,8 +407,10 @@
                     const hotspotFields = [
                         { textKey: 'hotspot_sluk_text', urlKey: 'hotspot_sluk_url', node: root.querySelector('#hotspotSluk'), label: root.querySelector('#hotspotSlukLabel') },
                         { textKey: 'hotspot_flis_text', urlKey: 'hotspot_flis_url', node: root.querySelector('#hotspotFlis'), label: root.querySelector('#hotspotFlisLabel') },
+                        { textKey: 'hotspot_fall_text', urlKey: 'hotspot_fall_url', node: root.querySelector('#hotspotFall'), label: root.querySelector('#hotspotFallLabel') },
                         { textKey: 'hotspot_sisterne_text', urlKey: 'hotspot_sisterne_url', node: root.querySelector('#hotspotSisterne'), label: root.querySelector('#hotspotSisterneLabel') },
-                        { textKey: 'hotspot_armatur_text', urlKey: 'hotspot_armatur_url', node: root.querySelector('#hotspotArmatur'), label: root.querySelector('#hotspotArmaturLabel') }
+                        { textKey: 'hotspot_rorbrudd_text', urlKey: 'hotspot_rorbrudd_url', node: root.querySelector('#hotspotRorbrudd'), label: root.querySelector('#hotspotRorbruddLabel') },
+                        { textKey: 'hotspot_terskel_text', urlKey: 'hotspot_terskel_url', node: root.querySelector('#hotspotTerskel'), label: root.querySelector('#hotspotTerskelLabel') }
                     ];
 
                     function decodeBase64Json(value) {
@@ -499,8 +516,10 @@
                     'default': 'images/friskt-bad-1600.webp',
                     'sluk': 'images/sluk-1600.webp',
                     'flis': 'images/sprekk-i-flis-1600.webp',
+                    'fall': 'images/feilfall.jpg',
                     'sisterne': 'images/innebygd-sisterne-1600.webp',
-                    'armatur': 'images/armatur-1600.webp'
+                    'rorbrudd': 'images/armatur-1600.webp',
+                    'terskel': 'images/terskel.jpg'
                 };
 
                 function isCanvasVisible() {
@@ -529,13 +548,23 @@
                     const transform = 'scale(1.8)';
                     const origin = `${x}% ${y}%`;
                     defaultBg.style.transformOrigin = origin;
-                    defaultBg.style.transform = transform;
                     zoomOverlay.style.backgroundImage = `url('${imageUrl}')`;
                     zoomOverlay.style.transformOrigin = origin;
-                    zoomOverlay.style.transform = transform;
-                    zoomOverlay.style.opacity = '1';
+                    if (key === 'terskel') {
+                        defaultBg.style.transform = 'scale(1)';
+                        zoomOverlay.style.transform = 'translateX(-14%) scale(1)';
+                        zoomOverlay.style.opacity = '0';
+                        requestAnimationFrame(() => {
+                            zoomOverlay.style.transform = 'translateX(0) scale(1)';
+                            zoomOverlay.style.opacity = '1';
+                        });
+                    } else {
+                        defaultBg.style.transform = transform;
+                        zoomOverlay.style.transform = transform;
+                        zoomOverlay.style.opacity = '1';
+                    }
                     hotspots.forEach((h) => {
-                        if (h !== spot) h.style.opacity = '0.2';
+                        if (h !== spot) h.style.opacity = key === 'terskel' ? '0' : '0.2';
                     });
                 }
 
